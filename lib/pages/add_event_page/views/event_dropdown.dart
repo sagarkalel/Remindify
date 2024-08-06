@@ -1,4 +1,4 @@
-import 'package:birthday_reminder/services/app_services.dart';
+import 'package:Remindify/services/app_services.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';

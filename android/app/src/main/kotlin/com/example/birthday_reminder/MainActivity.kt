@@ -1,5 +1,5 @@
-package com.example.birthday_reminder
+package com.example.Remindify
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity()
+class MainActivity : FlutterActivity()

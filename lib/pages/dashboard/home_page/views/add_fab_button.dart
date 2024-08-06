@@ -1,6 +1,6 @@
-import 'package:birthday_reminder/pages/add_event_page/add_my_contact_page.dart';
-import 'package:birthday_reminder/pages/dashboard/home_page/bloc/home_bloc.dart';
-import 'package:birthday_reminder/utils/extensions.dart';
+import 'package:Remindify/pages/add_event_page/add_my_contact_page.dart';
+import 'package:Remindify/pages/dashboard/home_page/bloc/home_bloc.dart';
+import 'package:Remindify/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

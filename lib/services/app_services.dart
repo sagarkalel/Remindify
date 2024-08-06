@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:birthday_reminder/models/event_model.dart';
-import 'package:birthday_reminder/models/schedule_time_model.dart';
-import 'package:birthday_reminder/pages/view_event_page/view_event_page.dart';
-import 'package:birthday_reminder/services/database_services.dart';
+import 'package:Remindify/models/event_model.dart';
+import 'package:Remindify/models/schedule_time_model.dart';
+import 'package:Remindify/pages/view_event_page/view_event_page.dart';
+import 'package:Remindify/services/database_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:intl/intl.dart';

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:birthday_reminder/models/schedule_time_model.dart';
-import 'package:birthday_reminder/services/app_services.dart';
+import 'package:Remindify/models/schedule_time_model.dart';
+import 'package:Remindify/services/app_services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -60,6 +60,7 @@ class NotificationServices {
   static Future<bool> requestExactAlarmPermission() async {
     if (await Permission.scheduleExactAlarm.isDenied) {
       await Permission.scheduleExactAlarm.request();
+      log("after exact alarm permission!");
     }
 
     return await Permission.scheduleExactAlarm.isGranted;

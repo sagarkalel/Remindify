@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "birthday_reminder" "\0"
+            VALUE "FileDescription", "Remindify" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "birthday_reminder" "\0"
+            VALUE "InternalName", "Remindify" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "birthday_reminder.exe" "\0"
-            VALUE "ProductName", "birthday_reminder" "\0"
+            VALUE "OriginalFilename", "Remindify.exe" "\0"
+            VALUE "ProductName", "Remindify" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

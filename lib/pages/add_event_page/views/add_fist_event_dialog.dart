@@ -1,5 +1,5 @@
-import 'package:birthday_reminder/models/event_model.dart';
-import 'package:birthday_reminder/services/app_services.dart';
+import 'package:Remindify/models/event_model.dart';
+import 'package:Remindify/services/app_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/properties/event.dart';
 import 'package:intl/intl.dart';

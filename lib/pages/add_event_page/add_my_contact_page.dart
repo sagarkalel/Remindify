@@ -1,5 +1,5 @@
-import 'package:birthday_reminder/models/my_contact_model.dart';
-import 'package:birthday_reminder/pages/add_event_page/bloc/add_my_contact_bloc.dart';
+import 'package:Remindify/models/my_contact_model.dart';
+import 'package:Remindify/pages/add_event_page/bloc/add_my_contact_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

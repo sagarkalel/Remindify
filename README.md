@@ -1,4 +1,4 @@
-# birthday_reminder
+# Remindify
 
 A new Flutter project.
 

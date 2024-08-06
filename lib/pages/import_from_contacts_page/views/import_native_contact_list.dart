@@ -1,7 +1,7 @@
-import 'package:birthday_reminder/pages/import_from_contacts_page/bloc/import_native_contact_bloc.dart';
-import 'package:birthday_reminder/pages/import_from_contacts_page/views/import_native_contact_list_tile.dart';
-import 'package:birthday_reminder/utils/extensions.dart';
-import 'package:birthday_reminder/utils/global_constants.dart';
+import 'package:Remindify/pages/import_from_contacts_page/bloc/import_native_contact_bloc.dart';
+import 'package:Remindify/pages/import_from_contacts_page/views/import_native_contact_list_tile.dart';
+import 'package:Remindify/utils/extensions.dart';
+import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';

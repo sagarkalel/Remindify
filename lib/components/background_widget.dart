@@ -1,4 +1,4 @@
-import 'package:birthday_reminder/utils/global_constants.dart';
+import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
 
 class BackgroundWidget extends StatelessWidget {

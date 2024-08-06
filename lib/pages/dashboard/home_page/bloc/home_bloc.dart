@@ -1,14 +1,15 @@
 import 'dart:developer';
 
-import 'package:birthday_reminder/models/filter_model.dart';
-import 'package:birthday_reminder/models/my_contact_model.dart';
-import 'package:birthday_reminder/models/schedule_time_model.dart';
-import 'package:birthday_reminder/services/app_services.dart';
-import 'package:birthday_reminder/services/database_services.dart';
+import 'package:Remindify/models/filter_model.dart';
+import 'package:Remindify/models/my_contact_model.dart';
+import 'package:Remindify/models/schedule_time_model.dart';
+import 'package:Remindify/services/app_services.dart';
+import 'package:Remindify/services/database_services.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../settings/bloc/setting_bloc.dart';
 
@@ -22,6 +23,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   FilterModel appliedFilter = filterList.first;
   bool isSearchVisible = false;
+  bool showPermissionWidget = false;
   final searchController = TextEditingController();
   final searchFocusNode = FocusNode();
 
@@ -34,6 +36,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<GetSearch>(_getSearch);
     on<SearchEvents>(_searchEvents);
     on<ClearSearch>(_clearSearch);
+    on<CheckPermissions>(_checkPermissionWidget);
   }
 
   /// toggle search
@@ -90,7 +93,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       ScheduleEvents event, Emitter<HomeState> emit) async {
     try {
       for (final element in originalContactListFromDb) {
-        AppServices.scheduleEventNotifications(
+        await AppServices.scheduleEventNotifications(
           events: element.events,
           name: element.name,
           contactId: element.id,
@@ -265,5 +268,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         break;
     }
     return sortedList;
+  }
+
+  Future<void> _checkPermissionWidget(
+      CheckPermissions event, Emitter<HomeState> emit) async {
+    final notificationPermission = await Permission.notification.isGranted;
+    final exactAlarmPermission = await Permission.scheduleExactAlarm.isGranted;
+    showPermissionWidget = !notificationPermission || !exactAlarmPermission;
+    log("this is permission variable state: $showPermissionWidget");
+    emit(NotificationPermissionCheckState(notificationPermission));
+    emit(ExactAlarmPermissionCheckState(exactAlarmPermission));
   }
 }

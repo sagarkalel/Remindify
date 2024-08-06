@@ -1,5 +1,5 @@
-import 'package:birthday_reminder/models/event_model.dart';
-import 'package:birthday_reminder/services/app_services.dart';
+import 'package:Remindify/models/event_model.dart';
+import 'package:Remindify/services/app_services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
 class MyContactModel {

@@ -1,7 +1,7 @@
-import 'package:birthday_reminder/models/event_model.dart';
-import 'package:birthday_reminder/services/app_services.dart';
-import 'package:birthday_reminder/utils/extensions.dart';
-import 'package:birthday_reminder/utils/global_constants.dart';
+import 'package:Remindify/models/event_model.dart';
+import 'package:Remindify/services/app_services.dart';
+import 'package:Remindify/utils/extensions.dart';
+import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
 
 class EventList extends StatelessWidget {

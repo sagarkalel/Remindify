@@ -1,9 +1,9 @@
-import 'package:birthday_reminder/components/app_textfield.dart';
-import 'package:birthday_reminder/components/background_widget.dart';
-import 'package:birthday_reminder/models/schedule_time_model.dart';
-import 'package:birthday_reminder/pages/dashboard/home_page/bloc/home_bloc.dart';
-import 'package:birthday_reminder/utils/extensions.dart';
-import 'package:birthday_reminder/utils/global_constants.dart';
+import 'package:Remindify/components/app_textfield.dart';
+import 'package:Remindify/components/background_widget.dart';
+import 'package:Remindify/models/schedule_time_model.dart';
+import 'package:Remindify/pages/dashboard/home_page/bloc/home_bloc.dart';
+import 'package:Remindify/utils/extensions.dart';
+import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

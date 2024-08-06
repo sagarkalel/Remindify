@@ -1,5 +1,5 @@
-import 'package:birthday_reminder/pages/import_from_contacts_page/bloc/import_native_contact_bloc.dart';
-import 'package:birthday_reminder/pages/import_from_contacts_page/views/import_native_contact_page_view.dart';
+import 'package:Remindify/pages/import_from_contacts_page/bloc/import_native_contact_bloc.dart';
+import 'package:Remindify/pages/import_from_contacts_page/views/import_native_contact_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

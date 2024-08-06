@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:birthday_reminder/models/schedule_time_model.dart';
-import 'package:birthday_reminder/services/database_services.dart';
+import 'package:Remindify/models/schedule_time_model.dart';
+import 'package:Remindify/services/database_services.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

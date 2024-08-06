@@ -1,8 +1,8 @@
-import 'package:birthday_reminder/models/my_contact_model.dart';
-import 'package:birthday_reminder/pages/view_event_page/view_event_page.dart';
-import 'package:birthday_reminder/services/app_services.dart';
-import 'package:birthday_reminder/utils/extensions.dart';
-import 'package:birthday_reminder/utils/global_constants.dart';
+import 'package:Remindify/models/my_contact_model.dart';
+import 'package:Remindify/pages/view_event_page/view_event_page.dart';
+import 'package:Remindify/services/app_services.dart';
+import 'package:Remindify/utils/extensions.dart';
+import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
 
 class HomePageListTile extends StatelessWidget {

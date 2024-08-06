@@ -1,5 +1,5 @@
-import 'package:birthday_reminder/utils/extensions.dart';
-import 'package:birthday_reminder/utils/global_constants.dart';
+import 'package:Remindify/utils/extensions.dart';
+import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
 
 class NotificationDisabledWidget extends StatelessWidget {
@@ -10,7 +10,7 @@ class NotificationDisabledWidget extends StatelessWidget {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
-        height: 90,
+        height: 95,
         color: const Color(0xFFFFEABC),
         child: Row(
           children: [
@@ -20,9 +20,10 @@ class NotificationDisabledWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Notification disabled",
+                Text("Enable Permissions",
                     style: Theme.of(context).textTheme.titleLarge),
-                const Text("Enable notifications to get reminders on time!"),
+                const Text(
+                    "Enable notifications and exact alarms for timely reminders. Without these, reminders won't work."),
               ],
             ).expand,
             const XGap(24),

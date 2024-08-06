@@ -36,7 +36,7 @@ class HomePageList extends StatelessWidget {
                 top: 4,
                 bottom: getScreenY(context) * 0.15),
             sliver: SliverList.builder(
-              itemCount: myContacts.length + 1,
+              itemCount: myContacts.length,
               itemBuilder: (_, i) => HomePageListTile(item: myContacts[i]),
             ),
           )

@@ -41,6 +41,8 @@ class GetSearch extends HomeEvent {}
 
 class SearchEvents extends HomeEvent {}
 
+class CheckPermissions extends HomeEvent {}
+
 class ClearSearch extends HomeEvent {
   final bool clearOnly;
 

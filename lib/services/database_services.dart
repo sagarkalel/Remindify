@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:birthday_reminder/models/event_model.dart';
-import 'package:birthday_reminder/models/my_contact_model.dart';
-import 'package:birthday_reminder/models/schedule_time_model.dart';
+import 'package:Remindify/models/event_model.dart';
+import 'package:Remindify/models/my_contact_model.dart';
+import 'package:Remindify/models/schedule_time_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

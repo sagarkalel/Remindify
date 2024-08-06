@@ -53,3 +53,21 @@ final class SearchToggleState extends HomeState {
   @override
   List<Object> get props => [isSearchVisible];
 }
+
+final class NotificationPermissionCheckState extends HomeState {
+  final bool isGranted;
+
+  const NotificationPermissionCheckState(this.isGranted);
+
+  @override
+  List<Object> get props => [isGranted];
+}
+
+final class ExactAlarmPermissionCheckState extends HomeState {
+  final bool isGranted;
+
+  const ExactAlarmPermissionCheckState(this.isGranted);
+
+  @override
+  List<Object> get props => [isGranted];
+}

@@ -1,4 +1,4 @@
-import 'package:birthday_reminder/services/app_services.dart';
+import 'package:Remindify/services/app_services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
 class EventModel {

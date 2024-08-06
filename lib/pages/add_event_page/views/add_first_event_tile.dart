@@ -1,4 +1,4 @@
-import 'package:birthday_reminder/utils/extensions.dart';
+import 'package:Remindify/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 class AddFirstEventTile extends StatelessWidget {
