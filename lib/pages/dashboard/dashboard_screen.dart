@@ -19,10 +19,12 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     /// requesting permissions
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -32,9 +34,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
         context.read<HomeBloc>().add(CheckPermissions());
       }
     });
-    WidgetsBinding.instance.scheduleFrameCallback(
-      (timeStamp) {},
-    );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      log("AppLifecycle state resumed!");
+      context.read<HomeBloc>().add(CheckPermissions());
+    }
   }
 
   @override

@@ -223,7 +223,11 @@ class AppServices {
         final isToday = eventDate.day == eventDate.day - eachTime.daysBefore;
         await NotificationServices.scheduleYearlyNotification(
           title: generateNotificationTitle(
-              event: event.label, name: name, isToday: isToday),
+            event: event.label,
+            name: name,
+            isToday: isToday,
+            customLabel: event.customLabel,
+          ),
           body: generateNotificationBody(
             event: event.label,
             name: name,
@@ -245,6 +249,7 @@ class AppServices {
     required EventLabel event,
     required String name,
     required bool isToday,
+    required String? customLabel,
   }) {
     switch (event) {
       case EventLabel.birthday:
@@ -255,10 +260,8 @@ class AppServices {
         return 'Reminder for $name\'s Anniversary!';
       case EventLabel.other:
         return 'Reminder for ${eventLabelToString[event]}! 📅📌';
-
-      /// TODO: add proper title for custom label
       case EventLabel.custom:
-        return 'Reminder for ${eventLabelToString[event]}! 📅📌';
+        return 'Reminder for $customLabel! 📅📌';
       default:
         return 'Reminder for ${eventLabelToString[event]}! 📅📌';
     }

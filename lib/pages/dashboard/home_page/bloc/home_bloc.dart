@@ -272,11 +272,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<void> _checkPermissionWidget(
       CheckPermissions event, Emitter<HomeState> emit) async {
-    final notificationPermission = await Permission.notification.isGranted;
-    final exactAlarmPermission = await Permission.scheduleExactAlarm.isGranted;
-    showPermissionWidget = !notificationPermission || !exactAlarmPermission;
-    log("this is permission variable state: $showPermissionWidget");
-    emit(NotificationPermissionCheckState(notificationPermission));
-    emit(ExactAlarmPermissionCheckState(exactAlarmPermission));
+    try {
+      final notificationPermission = await Permission.notification.isGranted;
+      final exactAlarmPermission =
+          await Permission.scheduleExactAlarm.isGranted;
+      showPermissionWidget = !notificationPermission || !exactAlarmPermission;
+      log("this is showPermissionWidget variable state: $showPermissionWidget");
+      emit(NotificationPermissionCheckState(notificationPermission));
+      emit(ExactAlarmPermissionCheckState(exactAlarmPermission));
+    } catch (e) {
+      log("Error while checking permission widget: $e");
+    }
   }
 }
