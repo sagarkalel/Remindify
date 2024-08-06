@@ -30,33 +30,37 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(create: (context) => DashboardBloc()),
       ],
-      child: MaterialApp(
-          title: 'Event reminder app',
-          navigatorKey: AppServices.navigatorKey,
-          initialRoute: '/dashboard',
-          routes: {"/dashboard": (context) => const DashboardScreen()},
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData.light(useMaterial3: true).copyWith(
-            colorScheme: kColorScheme,
-            appBarTheme: const AppBarTheme().copyWith(
-              backgroundColor: kColorScheme.inversePrimary,
-              elevation: 4,
-              shadowColor: kColorScheme.primary,
-            ),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: kColorScheme.surfaceTint,
-                foregroundColor: kColorScheme.onInverseSurface,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                textStyle:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: FocusManager.instance.primaryFocus?.unfocus,
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Event reminder app',
+            navigatorKey: AppServices.navigatorKey,
+            initialRoute: '/dashboard',
+            routes: {"/dashboard": (context) => const DashboardScreen()},
+            theme: ThemeData.light(useMaterial3: true).copyWith(
+              colorScheme: kColorScheme,
+              appBarTheme: const AppBarTheme().copyWith(
+                backgroundColor: kColorScheme.inversePrimary,
+                elevation: 4,
+                shadowColor: kColorScheme.primary,
               ),
-            ),
-            iconTheme: const IconThemeData().copyWith(
-              color: Theme.of(context).primaryColor,
-            ),
-          )),
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: kColorScheme.surfaceTint,
+                  foregroundColor: kColorScheme.onInverseSurface,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  textStyle: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 16),
+                ),
+              ),
+              iconTheme: const IconThemeData().copyWith(
+                color: Theme.of(context).primaryColor,
+              ),
+            )),
+      ),
     );
   }
 }

@@ -108,8 +108,12 @@ class HomePageView extends StatelessWidget {
                               backgroundColor:
                                   bloc.appliedFilter == filterList.first
                                       ? Colors.transparent
-                                      : null,
-                              child: const Icon(Icons.filter_list),
+                                      : kColorScheme.onInverseSurface,
+                              child: Icon(
+                                bloc.appliedFilter == filterList.first
+                                    ? Icons.filter_list
+                                    : Icons.filter_list_off,
+                              ),
                             ),
                           ).padXX(10),
                   ],

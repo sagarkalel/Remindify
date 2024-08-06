@@ -14,13 +14,6 @@ class HomePageListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final daysLeft =
         AppServices.getDaysUntilNextDateFromClosureEvent(item.events);
-
-    // /// scheduling notifications for events from here
-    // AppServices.scheduleEventNotifications(
-    //   events: item.events,
-    //   name: item.name,
-    //   contactId: item.id,
-    // );
     return Card(
       child: ListTile(
         shape: RoundedRectangleBorder(

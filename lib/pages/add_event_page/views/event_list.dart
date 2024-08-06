@@ -3,6 +3,7 @@ import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 class EventList extends StatelessWidget {
   const EventList({
@@ -40,7 +41,11 @@ class EventList extends StatelessWidget {
                   minVerticalPadding: 0,
                   title: Text(item.date),
                   trailing: Text(
-                    AppServices.eventLabelToString[item.label] ?? "Birthday",
+                    (AppServices.eventLabelToString[item.label] ==
+                            AppServices.eventLabelToString[EventLabel.custom])
+                        ? (item.customLabel ?? 'Custom Label')
+                        : (AppServices.eventLabelToString[item.label] ??
+                            'Birthday'),
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ).padYBottom(3),

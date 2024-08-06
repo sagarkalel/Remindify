@@ -70,213 +70,207 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        nameFocusNode.unfocus();
-        phoneFocusNode.unfocus();
-        noteFocusNode.unfocus();
-      },
-      child: Scaffold(
-        appBar: AppBar(title: const Text("Create Event")),
-        body: Stack(
-          children: [
-            const BackgroundWidget(),
-            SafeArea(
-              child: Form(
-                key: _formKey,
-                child: BlocConsumer<AddMyContactBloc, AddMyContactState>(
-                  listener: (context, state) {
-                    if (state is AddMyContactAddedState) {
-                      /// go back to home when adding event
-                      Navigator.pop(context, true);
-                      AppServices.showSnackBar(
-                          context, "Event added successfully!");
-                    } else if (state is AddMyContactUpdatedState) {
-                      /// go back to home when updating event
-                      Navigator.popUntil(
-                          context, ModalRoute.withName('/dashboard'));
+    return Scaffold(
+      appBar: AppBar(title: const Text("Create Event")),
+      body: Stack(
+        children: [
+          const BackgroundWidget(),
+          SafeArea(
+            child: Form(
+              key: _formKey,
+              child: BlocConsumer<AddMyContactBloc, AddMyContactState>(
+                listener: (context, state) {
+                  if (state is AddMyContactAddedState) {
+                    /// go back to home when adding event
+                    Navigator.pop(context, true);
+                    AppServices.showSnackBar(
+                        context, "Event added successfully!");
+                  } else if (state is AddMyContactUpdatedState) {
+                    /// go back to home when updating event
+                    Navigator.popUntil(
+                        context, ModalRoute.withName('/dashboard'));
 
-                      /// refresh contacts in home page
-                      context.read<HomeBloc>().add(
-                          const FetchMyContactsFromDb(scheduleEvents: true));
-                      AppServices.showSnackBar(
-                          context, "Event updated successfully!");
-                    } else if (state is AddMyContactErrorState) {
-                      AppServices.showSnackBar(
-                          context, "Something went wrong, please try again!");
-                      log("This error is getting while adding or updating MyContact: ${state.errorMessage}");
-                    }
-                  },
-                  builder: (context, state) {
-                    return Column(
-                      children: [
-                        SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              /// image
-                              Center(
-                                  child: Stack(
-                                children: [
-                                  CircleAvatar(
-                                    maxRadius: 65,
-                                    child: Icon(
-                                      Icons.person,
-                                      size: 75,
-                                      color: Theme.of(context).focusColor,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.edit,
-                                          color: Colors.white),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            Theme.of(context).disabledColor,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              )),
-                              const YGap(30),
-
-                              /// name
-                              Text("Name *", style: headingStyle(context)),
-                              AppTextField(
-                                controller: nameController,
-                                hintText: "John Cena",
-                                focusNode: nameFocusNode,
-                                prefix: const Icon(Icons.person),
-                                validator: (val) {
-                                  if (val == null || val.trim().length < 3) {
-                                    return "Please enter valid name!";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const YGap(10),
-
-                              /// phone number
-                              Text(
-                                "Phone Number (Optional)",
-                                style: headingStyle(context),
-                              ),
-                              AppTextField(
-                                controller: phoneController,
-                                hintText: "+911234567890",
-                                focusNode: phoneFocusNode,
-                                keyboardType: TextInputType.phone,
-                                maxLength: 13,
-                                prefix: const Icon(Icons.phone),
-                                onChanged: (value) {
-                                  if (value.trim().length >= 13) {
-                                    phoneFocusNode.unfocus();
-                                  }
-                                },
-                                validator: (val) {
-                                  if (val != null &&
-                                      val.isNotEmpty &&
-                                      (val.trim().length > 13 ||
-                                          val.trim().length < 10)) {
-                                    return "Please enter valid phone number!";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const YGap(10),
-
-                              /// event label
-                              Text("Events *", style: headingStyle(context)),
-
-                              const YGap(10),
-
-                              /// event list
-                              EventList(
-                                events: _events,
-                                onRemove: (index) =>
-                                    setState(() => _events.removeAt(index)),
-                              ),
-
-                              /// add first event tile
-                              if (_events.isEmpty)
-                                AddFirstEventTile(onTap: () async {
-                                  final eventModel =
-                                      await addFirstEventDialog(context);
-                                  if (eventModel != null) {
-                                    _events.add(eventModel);
-                                    setState(() {});
-                                  }
-                                  noteFocusNode.unfocus();
-                                  nameFocusNode.unfocus();
-                                  phoneFocusNode.unfocus();
-                                }),
-                              const YGap(10),
-
-                              /// add more events, button when events.length is less than 4
-                              if (_events.length < 4 && _events.isNotEmpty) ...[
-                                Container(
-                                  height: 30,
-                                  alignment: Alignment.centerRight,
-                                  child: OutlinedButton.icon(
-                                    onPressed: () => _addMoreEvents(),
-                                    iconAlignment: IconAlignment.end,
-                                    label: const Text("Add more Events"),
-                                    icon: const Icon(Icons.add_card_outlined),
+                    /// refresh contacts in home page
+                    context
+                        .read<HomeBloc>()
+                        .add(const FetchMyContactsFromDb(scheduleEvents: true));
+                    AppServices.showSnackBar(
+                        context, "Event updated successfully!");
+                  } else if (state is AddMyContactErrorState) {
+                    AppServices.showSnackBar(
+                        context, "Something went wrong, please try again!");
+                    log("This error is getting while adding or updating MyContact: ${state.errorMessage}");
+                  }
+                },
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            /// image
+                            Center(
+                                child: Stack(
+                              children: [
+                                CircleAvatar(
+                                  maxRadius: 65,
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 75,
+                                    color: Theme.of(context).focusColor,
                                   ),
                                 ),
-                                const YGap(16)
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.edit,
+                                        color: Colors.white),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Theme.of(context).disabledColor,
+                                    ),
+                                  ),
+                                )
                               ],
+                            )),
+                            const YGap(30),
 
-                              /// Note
-                              Text(
-                                "Note (Optional)",
-                                style: headingStyle(context),
-                              ),
-                              AppTextField(
-                                controller: noteController,
-                                maxLines: 5,
-                                focusNode: noteFocusNode,
-                                hintText: "Write note here...",
-                              ),
-                              const YGap(10),
-                            ],
-                          ).padAll(16),
-                        ).expand,
-                        Row(
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                final bloc = context.read<AddMyContactBloc>();
-                                bloc.editMyContactData == null
-                                    // add event
-                                    ? saveAndAddEvent(bloc)
-                                    // update event
-                                    : saveAndUpdateEvent(bloc);
+                            /// name
+                            Text("Name *", style: headingStyle(context)),
+                            AppTextField(
+                              controller: nameController,
+                              hintText: "John Cena",
+                              focusNode: nameFocusNode,
+                              prefix: const Icon(Icons.person),
+                              validator: (val) {
+                                if (val == null || val.trim().length < 3) {
+                                  return "Please enter valid name!";
+                                }
+                                return null;
                               },
-                              child: (state is AddMyContactLoadingState)
-                                  ? SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                          color: kColorScheme.onPrimary,
-                                          strokeWidth: 2),
-                                    )
-                                  : const Text("Save"),
-                            ).expand,
+                            ),
+                            const YGap(10),
+
+                            /// phone number
+                            Text(
+                              "Phone Number (Optional)",
+                              style: headingStyle(context),
+                            ),
+                            AppTextField(
+                              controller: phoneController,
+                              hintText: "+911234567890",
+                              focusNode: phoneFocusNode,
+                              keyboardType: TextInputType.phone,
+                              maxLength: 13,
+                              prefix: const Icon(Icons.phone),
+                              onChanged: (value) {
+                                if (value.trim().length >= 13) {
+                                  phoneFocusNode.unfocus();
+                                }
+                              },
+                              validator: (val) {
+                                if (val != null &&
+                                    val.isNotEmpty &&
+                                    (val.trim().length > 13 ||
+                                        val.trim().length < 10)) {
+                                  return "Please enter valid phone number!";
+                                }
+                                return null;
+                              },
+                            ),
+                            const YGap(10),
+
+                            /// event label
+                            Text("Events *", style: headingStyle(context)),
+
+                            const YGap(10),
+
+                            /// event list
+                            EventList(
+                              events: _events,
+                              onRemove: (index) =>
+                                  setState(() => _events.removeAt(index)),
+                            ),
+
+                            /// add first event tile
+                            if (_events.isEmpty)
+                              AddFirstEventTile(onTap: () async {
+                                final eventModel =
+                                    await addFirstEventDialog(context);
+                                if (eventModel != null) {
+                                  _events.add(eventModel);
+                                  setState(() {});
+                                }
+                                noteFocusNode.unfocus();
+                                nameFocusNode.unfocus();
+                                phoneFocusNode.unfocus();
+                              }),
+                            const YGap(10),
+
+                            /// add more events, button when events.length is less than 4
+                            if (_events.length < 4 && _events.isNotEmpty) ...[
+                              Container(
+                                height: 30,
+                                alignment: Alignment.centerRight,
+                                child: OutlinedButton.icon(
+                                  onPressed: () => _addMoreEvents(),
+                                  iconAlignment: IconAlignment.end,
+                                  label: const Text("Add more Events"),
+                                  icon: const Icon(Icons.add_card_outlined),
+                                ),
+                              ),
+                              const YGap(16)
+                            ],
+
+                            /// Note
+                            Text(
+                              "Note (Optional)",
+                              style: headingStyle(context),
+                            ),
+                            AppTextField(
+                              controller: noteController,
+                              maxLines: 5,
+                              focusNode: noteFocusNode,
+                              hintText: "Write note here...",
+                            ),
+                            const YGap(10),
                           ],
-                        ).padXXDefault,
-                        const YGap(20)
-                      ],
-                    );
-                  },
-                ),
+                        ).padAll(16),
+                      ).expand,
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              final bloc = context.read<AddMyContactBloc>();
+                              bloc.editMyContactData == null
+                                  // add event
+                                  ? saveAndAddEvent(bloc)
+                                  // update event
+                                  : saveAndUpdateEvent(bloc);
+                            },
+                            child: (state is AddMyContactLoadingState)
+                                ? SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                        color: kColorScheme.onPrimary,
+                                        strokeWidth: 2),
+                                  )
+                                : const Text("Save"),
+                          ).expand,
+                        ],
+                      ).padXXDefault,
+                      const YGap(20)
+                    ],
+                  );
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -331,23 +325,14 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
   }
 
   _addMoreEvents() async {
-    final eventLabelLeft = EventLabel.values
-            .where((element) {
-              if (_events.isNotEmpty) {
-                for (final i in _events) {
-                  if (i.label == element) {
-                    return false;
-                  }
-                }
-                return true;
-              }
-              return true;
-            })
-            .toList()
-            .firstOrNull ??
-        EventLabel.other;
-    final eventModel =
-        await addFirstEventDialog(context, initialEventLabel: eventLabelLeft);
+    final eventLabelLeft = EventLabel.values.where(
+      (element) {
+        if (_events.any((i) => i.label == element)) return false;
+        return true;
+      },
+    ).toList();
+    final eventModel = await addFirstEventDialog(context,
+        initialEventLabelList: eventLabelLeft);
     if (eventModel != null) {
       _events.add(eventModel);
       setState(() {});

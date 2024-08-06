@@ -2,6 +2,7 @@ import 'package:Remindify/models/event_model.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 import '../../../services/app_services.dart';
 
@@ -21,8 +22,9 @@ class EventListTile extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         visualDensity: VisualDensity.compact,
         tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
-        title: Text(
-            AppServices.eventLabelToString[item.label] ?? 'No Date found!'),
+        title: Text(item.label == EventLabel.custom
+            ? item.customLabel ?? 'None'
+            : AppServices.eventLabelToString[item.label] ?? 'No Date found!'),
         subtitle: Text(item.date),
         trailing: daysLeft == null
             ? const Icon(Icons.question_mark)

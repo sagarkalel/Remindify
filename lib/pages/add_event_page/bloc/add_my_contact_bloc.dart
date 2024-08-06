@@ -26,7 +26,7 @@ class AddMyContactBloc extends Bloc<AddMyContactEvent, AddMyContactState> {
       if (event.myContactModel != editMyContactData) {
         await event.databaseServices.updateContact(event.myContactModel);
       } else {
-        log("Ohh!, There was change to update.");
+        log("Ohh!, There was no change to update.");
       }
 
       /// TODO: added custom delay temp, will have to remove later

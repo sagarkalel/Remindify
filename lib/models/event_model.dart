@@ -12,7 +12,7 @@ class EventModel {
   final int eventId;
   String date;
 
-  /// Label (default [EventLabel.birthday]).
+  /// Label (default [EventLabel.custom]).
   EventLabel label;
 
   /// Custom label, if [label] is [EventLabel.custom].
@@ -21,7 +21,7 @@ class EventModel {
   factory EventModel.fromMap(Map<String, Object?> map) {
     return EventModel(
       label: AppServices.stringToEventLabel[map['label'] as String? ?? ''] ??
-          EventLabel.birthday,
+          EventLabel.custom,
       customLabel: map['custom_label'] as String?,
       date: map['date'] as String? ?? "No Date found!",
       eventId: map['event_id'] as int? ?? 0,

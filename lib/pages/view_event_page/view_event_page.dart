@@ -94,6 +94,16 @@ class ViewEventPage extends StatelessWidget {
                 /// Note
                 Text("Events", style: headingStyle(context)).padXLeft(20),
                 const YGap(4),
+                Visibility(
+                  visible: myContactModel.events.isEmpty,
+                  child: Text(
+                    "Events not found!",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(color: Theme.of(context).disabledColor),
+                  ),
+                ).padXLeft(20),
                 ListView.builder(
                   itemCount: myContactModel.events.length,
                   shrinkWrap: true,

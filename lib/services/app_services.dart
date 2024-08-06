@@ -150,7 +150,7 @@ class AppServices {
     EventModel? closestEvent = getClosureEventFromEvents(events);
     if (closestEvent == null) return 'No event found!';
     DateTime closestDate = dateFormat.parse(closestEvent.date);
-    return '${dateFormat.format(closestDate)} (${eventLabelToString[closestEvent.label] ?? ''})';
+    return '${dateFormat.format(closestDate)} (${(eventLabelToString[closestEvent.label] == eventLabelToString[EventLabel.custom]) ? closestEvent.customLabel : (eventLabelToString[closestEvent.label] ?? '')})';
   }
 
   /// get days left until next date
