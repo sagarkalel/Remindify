@@ -23,7 +23,7 @@ class AddFabButton extends StatelessWidget {
               (value) {
                 /// if value is true then only refresh data
                 if (value == true) {
-                  context.read<HomeBloc>().add(FetchMyContactsFromDb());
+                  context.read<HomeBloc>().add(const FetchMyContactsFromDb());
                 }
               },
             );

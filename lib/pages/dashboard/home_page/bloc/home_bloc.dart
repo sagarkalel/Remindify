@@ -100,8 +100,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           times: event.times,
         );
       }
-    } catch (e) {
-      log("Error while scheduling events: $e");
+    } catch (e, s) {
+      log("Error while scheduling events: $e", stackTrace: s);
       emit(EventsSchedulingError("Error while scheduling events: $e"));
     }
   }

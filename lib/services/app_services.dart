@@ -211,13 +211,16 @@ class AppServices {
     required int contactId,
     required List<ScheduleTimeModel> times,
   }) async {
+    if (events.isEmpty) return;
+
+    /// firstly cancelling scheduled notification before scheduling
+    /// because of multiple scheduled times
+    await NotificationServices.cancelAllNotifications();
+    log("scheduled times length = ${times.length}");
     for (var event in events) {
       if (event.date.isEmpty) return;
       final eventDate = dateFormat.parse(event.date);
 
-      /// firstly cancelling scheduled notification before scheduling
-      /// because of multiple scheduled times
-      log("Times = ${times.length}");
       for (final eachTime in times) {
         await NotificationServices.cancelNotification(event.eventId);
         final isToday = eventDate.day == eventDate.day - eachTime.daysBefore;

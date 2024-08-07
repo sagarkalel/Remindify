@@ -189,6 +189,10 @@ class NotificationServices {
             )
           : nextBirthday;
 
+      /// notification id
+      final notificationId = int.parse(
+          "$eventId${scheduledDate.month}${scheduledDate.day}${scheduledDate.hour}${scheduledDate.minute}");
+
       const AndroidNotificationDetails androidNotificationDetails =
           AndroidNotificationDetails('yearly_channel_id', 'yearly_channel_name',
               channelDescription: 'yearly_description',
@@ -201,18 +205,18 @@ class NotificationServices {
           NotificationDetails(android: androidNotificationDetails);
 
       await _flutterLocalNotificationsPlugin.zonedSchedule(
-        eventId,
+        notificationId,
         title,
         body,
         scheduledDate,
         notificationDetails,
-        // androidScheduleMode: AndroidScheduleMode.alarmClock,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         payload: payload,
         matchDateTimeComponents: DateTimeComponents.dateAndTime,
       );
-      log('Yearly notification scheduled, id: $eventId, and scheduled time: $scheduledDate');
+      log('Yearly notification scheduled, id: $notificationId, and scheduled time: $scheduledDate');
     } catch (e) {
       log('Error scheduling yearly notification: $e');
     }
