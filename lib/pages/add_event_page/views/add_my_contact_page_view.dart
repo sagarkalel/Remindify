@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:Remindify/components/app_textfield.dart';
 import 'package:Remindify/components/background_widget.dart';
+import 'package:Remindify/components/full_screen_loader.dart';
 import 'package:Remindify/models/event_model.dart';
 import 'package:Remindify/models/my_contact_model.dart';
 import 'package:Remindify/pages/add_event_page/bloc/add_my_contact_bloc.dart';
@@ -81,8 +80,12 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
               child: BlocConsumer<AddMyContactBloc, AddMyContactState>(
                 listener: (context, state) {
                   if (state is AddMyContactAddedState) {
-                    /// go back to home when adding event
-                    Navigator.pop(context, true);
+                    /// go back to home when updating event
+                    Navigator.popUntil(
+                        context, ModalRoute.withName('/dashboard'));
+
+                    /// refresh contacts in home page
+                    context.read<HomeBloc>().add(FetchMyContactsFromDb());
                     AppServices.showSnackBar(
                         context, "Event added successfully!");
                   } else if (state is AddMyContactUpdatedState) {
@@ -91,179 +94,185 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
                         context, ModalRoute.withName('/dashboard'));
 
                     /// refresh contacts in home page
-                    context
-                        .read<HomeBloc>()
-                        .add(const FetchMyContactsFromDb(scheduleEvents: true));
+                    context.read<HomeBloc>().add(FetchMyContactsFromDb());
                     AppServices.showSnackBar(
                         context, "Event updated successfully!");
                   } else if (state is AddMyContactErrorState) {
                     AppServices.showSnackBar(
                         context, "Something went wrong, please try again!");
-                    log("This error is getting while adding or updating MyContact: ${state.errorMessage}");
                   }
                 },
                 builder: (context, state) {
-                  return Column(
+                  return Stack(
                     children: [
-                      SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            /// image
-                            Center(
-                                child: Stack(
+                      Column(
+                        children: [
+                          SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CircleAvatar(
-                                  maxRadius: 65,
-                                  child: Icon(
-                                    Icons.person,
-                                    size: 75,
-                                    color: Theme.of(context).focusColor,
-                                  ),
+                                /// image
+                                Center(
+                                    child: Stack(
+                                  children: [
+                                    CircleAvatar(
+                                      maxRadius: 65,
+                                      child: Icon(
+                                        Icons.person,
+                                        size: 75,
+                                        color: Theme.of(context).focusColor,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: IconButton(
+                                        onPressed: () {},
+                                        icon: const Icon(Icons.edit,
+                                            color: Colors.white),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Theme.of(context).disabledColor,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )),
+                                const YGap(30),
+
+                                /// name
+                                Text("Name *", style: headingStyle(context)),
+                                AppTextField(
+                                  controller: nameController,
+                                  hintText: "John Cena",
+                                  focusNode: nameFocusNode,
+                                  prefix: const Icon(Icons.person),
+                                  validator: (val) {
+                                    if (val == null || val.trim().length < 3) {
+                                      return "Please enter valid name!";
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.edit,
-                                        color: Colors.white),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Theme.of(context).disabledColor,
+                                const YGap(10),
+
+                                /// phone number
+                                Text(
+                                  "Phone Number (Optional)",
+                                  style: headingStyle(context),
+                                ),
+                                AppTextField(
+                                  controller: phoneController,
+                                  hintText: "+911234567890",
+                                  focusNode: phoneFocusNode,
+                                  keyboardType: TextInputType.phone,
+                                  maxLength: 13,
+                                  prefix: const Icon(Icons.phone),
+                                  onChanged: (value) {
+                                    if (value.trim().length >= 13) {
+                                      phoneFocusNode.unfocus();
+                                    }
+                                  },
+                                  validator: (val) {
+                                    if (val != null &&
+                                        val.isNotEmpty &&
+                                        (val.trim().length > 13 ||
+                                            val.trim().length < 10)) {
+                                      return "Please enter valid phone number!";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const YGap(10),
+
+                                /// event label
+                                Text("Events *", style: headingStyle(context)),
+
+                                const YGap(10),
+
+                                /// event list
+                                EventList(
+                                  events: _events,
+                                  onRemove: (index) =>
+                                      setState(() => _events.removeAt(index)),
+                                ),
+
+                                /// add first event tile
+                                if (_events.isEmpty)
+                                  AddFirstEventTile(onTap: () async {
+                                    final eventModel =
+                                        await addFirstEventDialog(context);
+                                    if (eventModel != null) {
+                                      _events.add(eventModel);
+                                      setState(() {});
+                                    }
+                                    noteFocusNode.unfocus();
+                                    nameFocusNode.unfocus();
+                                    phoneFocusNode.unfocus();
+                                  }),
+                                const YGap(10),
+
+                                /// add more events, button when events.length is less than 4
+                                if (_events.length < 4 &&
+                                    _events.isNotEmpty) ...[
+                                  Container(
+                                    height: 30,
+                                    alignment: Alignment.centerRight,
+                                    child: OutlinedButton.icon(
+                                      onPressed: () => _addMoreEvents(),
+                                      iconAlignment: IconAlignment.end,
+                                      label: const Text("Add more Events"),
+                                      icon: const Icon(Icons.add_card_outlined),
                                     ),
                                   ),
-                                )
-                              ],
-                            )),
-                            const YGap(30),
+                                  const YGap(16)
+                                ],
 
-                            /// name
-                            Text("Name *", style: headingStyle(context)),
-                            AppTextField(
-                              controller: nameController,
-                              hintText: "John Cena",
-                              focusNode: nameFocusNode,
-                              prefix: const Icon(Icons.person),
-                              validator: (val) {
-                                if (val == null || val.trim().length < 3) {
-                                  return "Please enter valid name!";
-                                }
-                                return null;
-                              },
-                            ),
-                            const YGap(10),
-
-                            /// phone number
-                            Text(
-                              "Phone Number (Optional)",
-                              style: headingStyle(context),
-                            ),
-                            AppTextField(
-                              controller: phoneController,
-                              hintText: "+911234567890",
-                              focusNode: phoneFocusNode,
-                              keyboardType: TextInputType.phone,
-                              maxLength: 13,
-                              prefix: const Icon(Icons.phone),
-                              onChanged: (value) {
-                                if (value.trim().length >= 13) {
-                                  phoneFocusNode.unfocus();
-                                }
-                              },
-                              validator: (val) {
-                                if (val != null &&
-                                    val.isNotEmpty &&
-                                    (val.trim().length > 13 ||
-                                        val.trim().length < 10)) {
-                                  return "Please enter valid phone number!";
-                                }
-                                return null;
-                              },
-                            ),
-                            const YGap(10),
-
-                            /// event label
-                            Text("Events *", style: headingStyle(context)),
-
-                            const YGap(10),
-
-                            /// event list
-                            EventList(
-                              events: _events,
-                              onRemove: (index) =>
-                                  setState(() => _events.removeAt(index)),
-                            ),
-
-                            /// add first event tile
-                            if (_events.isEmpty)
-                              AddFirstEventTile(onTap: () async {
-                                final eventModel =
-                                    await addFirstEventDialog(context);
-                                if (eventModel != null) {
-                                  _events.add(eventModel);
-                                  setState(() {});
-                                }
-                                noteFocusNode.unfocus();
-                                nameFocusNode.unfocus();
-                                phoneFocusNode.unfocus();
-                              }),
-                            const YGap(10),
-
-                            /// add more events, button when events.length is less than 4
-                            if (_events.length < 4 && _events.isNotEmpty) ...[
-                              Container(
-                                height: 30,
-                                alignment: Alignment.centerRight,
-                                child: OutlinedButton.icon(
-                                  onPressed: () => _addMoreEvents(),
-                                  iconAlignment: IconAlignment.end,
-                                  label: const Text("Add more Events"),
-                                  icon: const Icon(Icons.add_card_outlined),
+                                /// Note
+                                Text(
+                                  "Note (Optional)",
+                                  style: headingStyle(context),
                                 ),
-                              ),
-                              const YGap(16)
-                            ],
-
-                            /// Note
-                            Text(
-                              "Note (Optional)",
-                              style: headingStyle(context),
-                            ),
-                            AppTextField(
-                              controller: noteController,
-                              maxLines: 5,
-                              focusNode: noteFocusNode,
-                              hintText: "Write note here...",
-                            ),
-                            const YGap(10),
-                          ],
-                        ).padAll(16),
-                      ).expand,
-                      Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              final bloc = context.read<AddMyContactBloc>();
-                              bloc.editMyContactData == null
-                                  // add event
-                                  ? saveAndAddEvent(bloc)
-                                  // update event
-                                  : saveAndUpdateEvent(bloc);
-                            },
-                            child: (state is AddMyContactLoadingState)
-                                ? SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                        color: kColorScheme.onPrimary,
-                                        strokeWidth: 2),
-                                  )
-                                : const Text("Save"),
+                                AppTextField(
+                                  controller: noteController,
+                                  maxLines: 5,
+                                  focusNode: noteFocusNode,
+                                  hintText: "Write note here...",
+                                ),
+                                const YGap(10),
+                              ],
+                            ).padAll(16),
                           ).expand,
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  final bloc = context.read<AddMyContactBloc>();
+                                  bloc.editMyContactData == null
+                                      // add event
+                                      ? saveAndAddEvent(bloc)
+                                      // update event
+                                      : saveAndUpdateEvent(bloc);
+                                },
+                                child: (state is AddMyContactLoadingState)
+                                    ? SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                            color: kColorScheme.onPrimary,
+                                            strokeWidth: 2),
+                                      )
+                                    : const Text("Save"),
+                              ).expand,
+                            ],
+                          ).padXXDefault,
+                          const YGap(20)
                         ],
-                      ).padXXDefault,
-                      const YGap(20)
+                      ),
+                      Visibility(
+                        visible: state is AddMyContactLoadingState,
+                        child: const FullScreenLoader(),
+                      ),
                     ],
                   );
                 },

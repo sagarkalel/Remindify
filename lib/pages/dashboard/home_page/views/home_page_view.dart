@@ -25,15 +25,7 @@ class HomePageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingBloc, SettingState>(
       builder: (context, settingState) {
-        return BlocConsumer<HomeBloc, HomeState>(
-          listener: (context, homeState) {
-            /// when setting data loaded, schedule events based on times
-            if (settingState is SettingScheduledTimesLoaded &&
-                homeState is HomeContactsLoadedState) {
-              context.read<HomeBloc>().add(
-                  ScheduleEvents(context.read<SettingBloc>().scheduledTimes));
-            }
-          },
+        return BlocBuilder<HomeBloc, HomeState>(
           builder: (context, homeState) {
             final bloc = context.read<HomeBloc>();
             return GestureDetector(
@@ -79,8 +71,7 @@ class HomePageView extends StatelessWidget {
                                 (value) {
                                   /// if value is true then only refresh data
                                   if (value == true) {
-                                    bloc.add(const FetchMyContactsFromDb(
-                                        scheduleEvents: true));
+                                    bloc.add(FetchMyContactsFromDb());
                                   }
                                 },
                               );

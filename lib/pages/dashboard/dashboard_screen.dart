@@ -57,22 +57,13 @@ class _DashboardScreenState extends State<DashboardScreen>
         body: Stack(
       children: [
         BlocBuilder<DashboardBloc, DashboardState>(
-          builder: (context, state) {
+          builder: (context, dashboardState) {
             final bloc = context.read<DashboardBloc>();
-            return BlocConsumer<SettingBloc, SettingState>(
-              listener: (context, state) {
-                /// when setting data loaded, schedule events based on times
-                if (state is SettingScheduledTimesLoaded) {
-                  log("setting is loaded in dashboard, now adding scheduled event");
-                  context.read<HomeBloc>().add(ScheduleEvents(
-                      context.read<SettingBloc>().scheduledTimes));
-                }
-              },
+            return BlocBuilder<SettingBloc, SettingState>(
               builder: (context, state) {
                 return PageView(
                   controller: bloc.pageController,
                   physics: const NeverScrollableScrollPhysics(),
-                  // physics: const AlwaysScrollableScrollPhysics(),
                   onPageChanged: (index) => bloc.add(OnPageChanged(index)),
                   children: const [
                     HomePage(),

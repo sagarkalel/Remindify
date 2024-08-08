@@ -228,5 +228,6 @@ class NotificationServices {
 
   static Future<void> cancelAllNotifications() async {
     await _flutterLocalNotificationsPlugin.cancelAll();
+    log("All notification cancelled to reschedule again");
   }
 }

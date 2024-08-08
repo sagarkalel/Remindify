@@ -37,6 +37,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SearchEvents>(_searchEvents);
     on<ClearSearch>(_clearSearch);
     on<CheckPermissions>(_checkPermissionWidget);
+    on<DeleteContact>(_deleteContact);
   }
 
   /// toggle search
@@ -124,13 +125,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               ?.read<SettingBloc>()
               .scheduledTimes ??
           [];
-      if (event.scheduleEvents) {
-        add(ScheduleEvents(scheduledTimes));
-      }
+      add(ScheduleEvents(scheduledTimes));
       emit(HomeContactsLoadedState(List.from(filterAppliedContactList)));
     } catch (e) {
-      log("Error while adding Event: $e");
+      log("Error while fetching contacts from db: $e");
       emit(HomeContactsErrorState(e.toString()));
+    }
+  }
+
+  Future<void> _deleteContact(
+      DeleteContact event, Emitter<HomeState> emit) async {
+    try {
+      emit(ContactDeleteLoading());
+      await DatabaseServices.instance.deleteContact(event.myContactModel);
+      await Future.delayed(const Duration(seconds: 1));
+      add(FetchMyContactsFromDb());
+      emit(ContactDeletedSuccessfully());
+    } catch (e) {
+      log("Error while deleting contact: $e");
+      emit(ContactDeleteFailure(e.toString()));
     }
   }
 

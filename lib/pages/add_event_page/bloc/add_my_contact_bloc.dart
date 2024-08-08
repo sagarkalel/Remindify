@@ -33,7 +33,7 @@ class AddMyContactBloc extends Bloc<AddMyContactEvent, AddMyContactState> {
       await Future.delayed(const Duration(seconds: 1));
       emit(AddMyContactUpdatedState());
     } catch (e) {
-      log("Error while adding Event: $e");
+      log("Error while updating Event: $e");
       emit(AddMyContactErrorState(e.toString()));
     }
   }

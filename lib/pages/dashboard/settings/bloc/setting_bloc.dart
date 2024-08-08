@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:Remindify/models/schedule_time_model.dart';
 import 'package:Remindify/services/database_services.dart';
+import 'package:Remindify/services/notification_services.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -85,6 +86,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
       await db.updateScheduledTime(scheduledTime);
       final times = await db.getScheduledTimeList();
       scheduledTimes = times;
+      await NotificationServices.cancelAllNotifications();
       emit(SettingSaved(List.of(scheduledTimes)));
     } catch (e) {
       emit(SettingSaveError(e.toString()));
@@ -98,6 +100,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
     try {
       await db.deleteScheduledTime(event.scheduledTime);
       scheduledTimes.remove(event.scheduledTime);
+      await NotificationServices.cancelAllNotifications();
       emit(SettingSaved(List.of(scheduledTimes)));
     } catch (e) {
       emit(SettingSaveError(e.toString()));

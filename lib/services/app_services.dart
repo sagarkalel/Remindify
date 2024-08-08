@@ -215,7 +215,7 @@ class AppServices {
 
     /// firstly cancelling scheduled notification before scheduling
     /// because of multiple scheduled times
-    await NotificationServices.cancelAllNotifications();
+    // await NotificationServices.cancelAllNotifications();
     log("scheduled times length = ${times.length}");
     for (var event in events) {
       if (event.date.isEmpty) return;

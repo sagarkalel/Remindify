@@ -228,18 +228,17 @@ class DatabaseServices {
 
   /// delete contact
   Future<void> deleteContact(MyContactModel contactModel) async {
+    final db = await getDatabase();
     try {
-      final db = await getDatabase();
-
-      /// deleting events
       await db.transaction((txn) async {
+        /// Delete related events
         await txn.delete(
           _eventsTableName,
           where: '$_contactIdColumnName = ?',
           whereArgs: [contactModel.id],
         );
 
-        /// deleting passed contact
+        /// Delete the contact
         await txn.delete(
           _mainTableName,
           where: '$_idColumnName = ?',
@@ -247,10 +246,11 @@ class DatabaseServices {
         );
       });
 
-      ///
-      log("contact deleted successfully!");
+      log("Contact deleted successfully!");
     } catch (e) {
-      throw Exception("error while deleting contact: $e");
+      log("Error while deleting contact with id ${contactModel.id}: $e");
+      throw Exception(
+          "Error while deleting contact with id ${contactModel.id}: $e");
     }
   }
 
@@ -280,7 +280,7 @@ class DatabaseServices {
         });
         contacts.add(contact);
       }
-      log("contact fetched successfully! and data is: $contactMaps");
+      log("contacts from db(${contactMaps.length}) fetched successfully!");
       return contacts;
     } catch (e) {
       throw Exception("error while fetching contacts from local DB: $e");

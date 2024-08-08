@@ -36,6 +36,19 @@ final class HomeContactsErrorState extends HomeState {
   List<Object> get props => [errorMessage];
 }
 
+final class ContactDeleteFailure extends HomeState {
+  final String errorMessage;
+
+  const ContactDeleteFailure(this.errorMessage);
+
+  @override
+  List<Object> get props => [errorMessage];
+}
+
+final class ContactDeletedSuccessfully extends HomeState {}
+
+final class ContactDeleteLoading extends HomeState {}
+
 final class EventsSchedulingError extends HomeState {
   final String errorMessage;
 

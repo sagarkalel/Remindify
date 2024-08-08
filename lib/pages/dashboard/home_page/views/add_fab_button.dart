@@ -1,8 +1,6 @@
 import 'package:Remindify/pages/add_event_page/add_my_contact_page.dart';
-import 'package:Remindify/pages/dashboard/home_page/bloc/home_bloc.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utils/global_constants.dart';
 
@@ -19,13 +17,6 @@ class AddFabButton extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const AddEventPage()),
-            ).then(
-              (value) {
-                /// if value is true then only refresh data
-                if (value == true) {
-                  context.read<HomeBloc>().add(const FetchMyContactsFromDb());
-                }
-              },
             );
           },
           child: Container(
