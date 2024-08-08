@@ -39,47 +39,11 @@ class ViewEventPage extends StatelessWidget {
                 actions: [
                   /// delete event contact
                   IconButton.filled(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return CupertinoAlertDialog(
-                            title: const Text("Alert"),
-                            content: Column(
-                              children: [
-                                Icon(Icons.warning_rounded,
-                                    size: 75,
-                                    color:
-                                        kColorScheme.primary.withOpacity(0.7)),
-                                const Text(
-                                    "Do you really want to delete this event ?")
-                              ],
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text("Cancel"),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  context
-                                      .read<HomeBloc>()
-                                      .add(DeleteContact(myContactModel));
-                                  Navigator.pop(context);
-                                },
-                                style: TextButton.styleFrom(
-                                  foregroundColor: kColorScheme.error,
-                                ),
-                                child: const Text("Delete"),
-                              )
-                            ],
-                          );
-                        },
-                      );
-                    },
+                    onPressed: () => _showDeleteAlertDialog(context),
                     icon: Icon(Icons.delete_forever_rounded,
                         color: kColorScheme.onPrimary),
                   ),
+                  const XGap(4),
 
                   /// edit event contact
                   IconButton.filled(
@@ -211,6 +175,40 @@ class ViewEventPage extends StatelessWidget {
               visible: state is ContactDeleteLoading,
               child: const FullScreenLoader(),
             ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showDeleteAlertDialog(context) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: const Text("Alert"),
+          content: Column(
+            children: [
+              Icon(Icons.warning_rounded,
+                  size: 75, color: kColorScheme.primary.withOpacity(0.7)),
+              const Text("Do you really want to delete this event ?")
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                context.read<HomeBloc>().add(DeleteContact(myContactModel));
+                Navigator.pop(context);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: kColorScheme.error,
+              ),
+              child: const Text("Delete"),
+            )
           ],
         );
       },
