@@ -122,7 +122,8 @@ class HomePageView extends StatelessWidget {
                             if (homeState is HomeContactsLoadingState) {
                               return const CupertinoActivityIndicator();
                             } else if (homeState is HomeContactsErrorState) {
-                              return Text(homeState.errorMessage,
+                              return const Text(
+                                      "Something went wrong, please try later!",
                                       textAlign: TextAlign.center)
                                   .padXXDefault;
                             } else {

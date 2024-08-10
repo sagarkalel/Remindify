@@ -33,9 +33,7 @@ class ImportFromContactListTile extends StatelessWidget {
         tileColor: Theme.of(context).primaryColor.withOpacity(0.1),
         secondary: CircleAvatar(
           backgroundColor: Theme.of(context).focusColor,
-          backgroundImage: item.image == null
-              ? null
-              : MemoryImage(AppServices.getImageData(item.image!)),
+          backgroundImage: item.image == null ? null : MemoryImage(item.image!),
           child: item.image == null
               ? Icon(Icons.person, size: 28, color: kColorScheme.secondary)
               : null,

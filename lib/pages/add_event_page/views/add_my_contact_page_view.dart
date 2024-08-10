@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:Remindify/components/app_textfield.dart';
 import 'package:Remindify/components/background_widget.dart';
 import 'package:Remindify/components/full_screen_loader.dart';
@@ -7,6 +9,7 @@ import 'package:Remindify/pages/add_event_page/bloc/add_my_contact_bloc.dart';
 import 'package:Remindify/pages/add_event_page/views/add_first_event_tile.dart';
 import 'package:Remindify/pages/add_event_page/views/add_fist_event_dialog.dart';
 import 'package:Remindify/pages/add_event_page/views/event_list.dart';
+import 'package:Remindify/pages/view_event_page/views/view_full_screen_image.dart';
 import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/services/database_services.dart';
 import 'package:Remindify/utils/extensions.dart';
@@ -16,6 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
 import '../../dashboard/home_page/bloc/home_bloc.dart';
+import 'edit_profile_image.dart';
 
 class AddMyContactPageView extends StatefulWidget {
   const AddMyContactPageView({super.key});
@@ -29,6 +33,7 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
+  Uint8List? profileImage;
 
   /// focus nodes
   final FocusNode nameFocusNode = FocusNode();
@@ -51,6 +56,7 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
       phoneController.text = editContactModelData.phone ?? '';
       noteController.text = editContactModelData.friendNote ?? '';
       _events.addAll(editContactModelData.events);
+      profileImage = editContactModelData.image;
     }
   }
 
@@ -115,20 +121,41 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
                                 Center(
                                     child: Stack(
                                   children: [
-                                    CircleAvatar(
-                                      maxRadius: 65,
-                                      child: Icon(
-                                        Icons.person,
-                                        size: 75,
-                                        color: Theme.of(context).focusColor,
+                                    InkWell(
+                                      borderRadius: BorderRadius.circular(65),
+                                      onTap: profileImage == null
+                                          ? null
+                                          : () => viewFullScreenImage(
+                                              context, profileImage!),
+                                      child: CircleAvatar(
+                                        maxRadius: 65,
+                                        backgroundImage: profileImage == null
+                                            ? null
+                                            : MemoryImage(profileImage!),
+                                        child: Icon(
+                                          Icons.person,
+                                          size: 75,
+                                          color: Theme.of(context).focusColor,
+                                        ),
                                       ),
                                     ),
                                     Positioned(
                                       bottom: 0,
                                       right: 0,
                                       child: IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(Icons.edit,
+                                        onPressed: () async {
+                                          final result = await editProfileImage(
+                                              context, profileImage);
+                                          if (result == "delete") {
+                                            profileImage = null;
+                                            setState(() {});
+                                          } else if (result != null) {
+                                            profileImage = result;
+                                            setState(() {});
+                                          }
+                                        },
+                                        icon: const Icon(
+                                            Icons.photo_camera_outlined,
                                             color: Colors.white),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor:
@@ -295,7 +322,7 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
       name: nameController.text.trim(),
       events: _events,
       phone: phoneController.text.trim(),
-      image: null,
+      image: profileImage,
       friendNote: noteController.text.trim(),
     );
     FocusScope.of(context).unfocus();
@@ -317,7 +344,7 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
       name: nameController.text.trim(),
       events: _events,
       phone: phoneController.text.trim(),
-      image: null,
+      image: profileImage,
       friendNote: noteController.text.trim(),
       id: bloc.editMyContactData!.id,
       inBuildId: bloc.editMyContactData!.inBuildId,

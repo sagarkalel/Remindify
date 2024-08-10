@@ -33,9 +33,7 @@ class HomePageListTile extends StatelessWidget {
         },
         leading: CircleAvatar(
           backgroundColor: Theme.of(context).focusColor,
-          backgroundImage: item.image == null
-              ? null
-              : MemoryImage(AppServices.getImageData(item.image!)),
+          backgroundImage: item.image == null ? null : MemoryImage(item.image!),
           child: item.image == null
               ? Icon(Icons.person, size: 28, color: kColorScheme.secondary)
               : null,

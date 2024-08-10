@@ -2,6 +2,7 @@ import 'package:Remindify/components/full_screen_loader.dart';
 import 'package:Remindify/models/my_contact_model.dart';
 import 'package:Remindify/pages/add_event_page/add_my_contact_page.dart';
 import 'package:Remindify/pages/dashboard/home_page/bloc/home_bloc.dart';
+import 'package:Remindify/pages/view_event_page/views/view_full_screen_image.dart';
 import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
@@ -74,20 +75,26 @@ class ViewEventPage extends StatelessWidget {
                             child: Card(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(65)),
-                          child: CircleAvatar(
-                            maxRadius: 65,
-                            backgroundImage: myContactModel.image == null
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(65),
+                            onTap: myContactModel.image == null
                                 ? null
-                                : MemoryImage(AppServices.getImageData(
-                                    myContactModel.image!)),
-                            child: myContactModel.image == null
-                                ? Icon(
-                                    Icons.person,
-                                    size: 75,
-                                    color: Theme.of(context).focusColor,
-                                  )
-                                : null,
-                          ).padAll(2),
+                                : () => viewFullScreenImage(
+                                    context, myContactModel.image!),
+                            child: CircleAvatar(
+                              maxRadius: 65,
+                              backgroundImage: myContactModel.image == null
+                                  ? null
+                                  : MemoryImage(myContactModel.image!),
+                              child: myContactModel.image == null
+                                  ? Icon(
+                                      Icons.person,
+                                      size: 75,
+                                      color: Theme.of(context).focusColor,
+                                    )
+                                  : null,
+                            ).padAll(2),
+                          ),
                         )),
                         const YGap(30),
                         Text("Phone Number", style: headingStyle(context))
