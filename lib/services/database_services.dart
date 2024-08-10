@@ -46,7 +46,7 @@ class DatabaseServices {
         $_inBuildIdColumnName TEXT,
         $_friendNoteColumnName TEXT,
         $_phoneColumnName TEXT,
-        $_imageColumnName TEXT
+        $_imageColumnName BLOB
         )
         ''');
 
