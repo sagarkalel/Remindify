@@ -46,7 +46,7 @@ class DatabaseServices {
         $_inBuildIdColumnName TEXT,
         $_friendNoteColumnName TEXT,
         $_phoneColumnName TEXT,
-        $_imageColumnName BLOB
+        $_imageColumnName LONGBLOB
         )
         ''');
 
@@ -170,24 +170,6 @@ class DatabaseServices {
       log("Scheduled time deleted successfully!");
     } catch (e) {
       throw Exception("error while deleting scheduled time: $e");
-    }
-  }
-
-  /// get all events
-  Future<List<EventModel>> getAllEvents() async {
-    List<EventModel> allEvents = [];
-    try {
-      final db = await getDatabase();
-      db.transaction(
-        (txn) async {
-          final mapEvents = await txn.query(_eventsTableName);
-          allEvents = mapEvents.map((e) => EventModel.fromMap(e)).toList();
-        },
-      );
-      log("All events fetched successfully!");
-      return allEvents;
-    } catch (e) {
-      throw Exception("error while getting all events: $e");
     }
   }
 

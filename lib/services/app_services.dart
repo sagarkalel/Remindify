@@ -8,6 +8,7 @@ import 'package:Remindify/pages/view_event_page/view_event_page.dart';
 import 'package:Remindify/services/database_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 
 import 'notification_services.dart';
@@ -101,6 +102,13 @@ class AppServices {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  /// get compressed file
+  static Future<Uint8List?> getCompressedFile(String path) async {
+    final result =
+        await FlutterImageCompress.compressWithFile(path, quality: 40);
+    return result;
   }
 
   /// get closure event and if it is empty then return null

@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,7 @@ Future<Uint8List?> editProfileImage(BuildContext context,
                         await imagePicker.pickImage(source: ImageSource.camera);
                     if (result != null) {
                       final imageInBytes =
-                          await File(result.path).readAsBytes();
+                          await AppServices.getCompressedFile(result.path);
                       image = imageInBytes;
                       updateState(() {});
                     }
@@ -74,7 +74,7 @@ Future<Uint8List?> editProfileImage(BuildContext context,
                         source: ImageSource.gallery);
                     if (result != null) {
                       final imageInBytes =
-                          await File(result.path).readAsBytes();
+                          await AppServices.getCompressedFile(result.path);
                       image = imageInBytes;
                       updateState(() {});
                     }
