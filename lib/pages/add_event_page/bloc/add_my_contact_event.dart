@@ -32,3 +32,5 @@ class UpdateMyContactFromDbEvent extends AddMyContactEvent {
   @override
   List<Object?> get props => [databaseServices, myContactModel];
 }
+
+class GetNativeContacts extends AddMyContactEvent {}

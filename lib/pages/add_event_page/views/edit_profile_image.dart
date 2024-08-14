@@ -6,7 +6,7 @@ import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-Future<Uint8List?> editProfileImage(BuildContext context,
+Future<dynamic> editProfileImage(BuildContext context,
     [Uint8List? initialImage]) async {
   Uint8List? image = initialImage;
   return showModalBottomSheet(

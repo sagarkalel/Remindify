@@ -9,6 +9,7 @@ import 'package:Remindify/pages/add_event_page/bloc/add_my_contact_bloc.dart';
 import 'package:Remindify/pages/add_event_page/views/add_first_event_tile.dart';
 import 'package:Remindify/pages/add_event_page/views/add_fist_event_dialog.dart';
 import 'package:Remindify/pages/add_event_page/views/event_list.dart';
+import 'package:Remindify/pages/add_event_page/views/import_from_contact_bottomsheet.dart';
 import 'package:Remindify/pages/view_event_page/views/view_full_screen_image.dart';
 import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/services/database_services.dart';
@@ -195,6 +196,38 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
                                   keyboardType: TextInputType.phone,
                                   maxLength: 13,
                                   prefix: const Icon(Icons.phone),
+                                  suffix: IconButton(
+                                    onPressed: () async {
+                                      final result =
+                                          await showImportFromContactBottomSheet(
+                                        context,
+                                        context.read<AddMyContactBloc>(),
+                                      );
+                                      // return if result is null
+                                      if (result == null) return;
+                                      // assign first phone number to phone controller
+                                      phoneController.text = result.phones
+                                              .firstOrNull?.normalizedNumber ??
+                                          '';
+                                      // assign name to name controller if it is empty
+                                      if (nameController.text.isEmpty) {
+                                        nameController.text =
+                                            result.displayName;
+                                      }
+                                      // assign photo if it is empty
+                                      profileImage ??= result.photoOrThumbnail;
+
+                                      // assign events if it is empty
+                                      if (_events.isEmpty) {
+                                        final contactEvent =
+                                            AppServices.getEvents(
+                                                result.events);
+                                        _events.addAll(contactEvent);
+                                      }
+                                      setState(() {});
+                                    },
+                                    icon: const Icon(Icons.contacts_rounded),
+                                  ),
                                   onChanged: (value) {
                                     if (value.trim().length >= 13) {
                                       phoneFocusNode.unfocus();

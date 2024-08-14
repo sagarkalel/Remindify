@@ -10,6 +10,17 @@ sealed class AddMyContactState extends Equatable {
 /// add event page states
 final class AddMyContactLoadingState extends AddMyContactState {}
 
+final class NativeContactsLoading extends AddMyContactState {}
+
+final class NativeContactsLoaded extends AddMyContactState {
+  final List<Contact> contacts;
+
+  const NativeContactsLoaded(this.contacts);
+
+  @override
+  List<Object> get props => [contacts];
+}
+
 final class AddMyContactInitialState extends AddMyContactState {}
 
 final class AddMyContactAddedState extends AddMyContactState {}
@@ -20,6 +31,15 @@ final class AddMyContactErrorState extends AddMyContactState {
   final String errorMessage;
 
   const AddMyContactErrorState(this.errorMessage);
+
+  @override
+  List<Object> get props => [errorMessage];
+}
+
+final class NativeContactsFailure extends AddMyContactState {
+  final String errorMessage;
+
+  const NativeContactsFailure(this.errorMessage);
 
   @override
   List<Object> get props => [errorMessage];

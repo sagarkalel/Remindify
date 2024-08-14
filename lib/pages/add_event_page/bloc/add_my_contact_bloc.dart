@@ -4,18 +4,39 @@ import 'package:Remindify/models/my_contact_model.dart';
 import 'package:Remindify/services/database_services.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 part 'add_my_contact_event.dart';
 part 'add_my_contact_state.dart';
 
 class AddMyContactBloc extends Bloc<AddMyContactEvent, AddMyContactState> {
   final MyContactModel? editMyContactData;
+  List<Contact> nativeContacts = [];
 
   AddMyContactBloc({this.editMyContactData})
       : super(AddMyContactInitialState()) {
     /// add contact-event to database
     on<AddMyContactToDbEvent>(_addEventToDatabase);
     on<UpdateMyContactFromDbEvent>(_updateEventInDatabase);
+    on<GetNativeContacts>(_getNativeContacts);
+  }
+
+  /// get native contacts
+  Future<void> _getNativeContacts(
+      GetNativeContacts event, Emitter<AddMyContactState> emit) async {
+    emit(NativeContactsLoading());
+    try {
+      final contacts = await FlutterContacts.getContacts(
+        withPhoto: true,
+        withThumbnail: true,
+        withProperties: true,
+      );
+      nativeContacts = contacts;
+      emit(NativeContactsLoaded(contacts));
+    } catch (e) {
+      log("Error while loading native contacts: $e");
+      emit(NativeContactsFailure(e.toString()));
+    }
   }
 
   /// update contact-event in database
