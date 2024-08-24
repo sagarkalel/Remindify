@@ -6,6 +6,7 @@ import 'package:Remindify/models/event_model.dart';
 import 'package:Remindify/models/schedule_time_model.dart';
 import 'package:Remindify/pages/view_event_page/view_event_page.dart';
 import 'package:Remindify/services/database_services.dart';
+import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -100,8 +101,15 @@ class AppServices {
 
   static void showSnackBar(context, String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(milliseconds: 800),
+      showCloseIcon: true,
+      margin: EdgeInsets.fromLTRB(15, 5, 15, getScreenY(context) * 0.12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      backgroundColor: kColorScheme.secondary,
+    ));
   }
 
   /// get compressed file
@@ -319,6 +327,7 @@ class AppServices {
 
       /// navigating to view event page
       if (navigatorKey.currentState == null) {
+        showSnackBar(navigatorKey.currentContext, 'Something went wrong!');
         return log("Navigator key's context is null");
       }
       navigatorKey.currentState?.push(MaterialPageRoute(

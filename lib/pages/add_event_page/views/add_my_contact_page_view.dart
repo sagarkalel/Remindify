@@ -314,15 +314,9 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
                                       // update event
                                       : saveAndUpdateEvent(bloc);
                                 },
-                                child: (state is AddMyContactLoadingState)
-                                    ? SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                            color: kColorScheme.onPrimary,
-                                            strokeWidth: 2),
-                                      )
-                                    : const Text("Save"),
+                                child: Text((state is AddMyContactLoadingState)
+                                    ? "Saving..."
+                                    : "Save"),
                               ).expand,
                             ],
                           ).padXXDefault,
