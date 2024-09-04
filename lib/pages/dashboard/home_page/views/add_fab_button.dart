@@ -1,4 +1,4 @@
-import 'package:Remindify/pages/add_event_page/add_my_contact_page.dart';
+import 'package:Remindify/pages/add_contact_info_page/add_contact_info_page.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +16,8 @@ class AddFabButton extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AddEventPage()),
+              MaterialPageRoute(
+                  builder: (context) => const AddContactInfoPage()),
             );
           },
           child: Container(

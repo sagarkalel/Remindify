@@ -1,4 +1,4 @@
-import 'package:Remindify/pages/add_event_page/bloc/add_my_contact_bloc.dart';
+import 'package:Remindify/pages/add_contact_info_page/bloc/add_my_contact_bloc.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
 Future<Contact?> showImportFromContactBottomSheet(
-    BuildContext context, AddMyContactBloc bloc) async {
+    BuildContext context, AddContactInfoBloc bloc) async {
   Contact? selectedContact;
   return await showModalBottomSheet(
     context: context,
@@ -32,7 +32,7 @@ Future<Contact?> showImportFromContactBottomSheet(
                 builder: (context, updateState) {
                   return Column(
                     children: [
-                      BlocBuilder<AddMyContactBloc, AddMyContactState>(
+                      BlocBuilder<AddContactInfoBloc, AddContactInfoState>(
                         builder: (context, state) {
                           if (state is NativeContactsLoading) {
                             return const Center(
@@ -47,8 +47,9 @@ Future<Contact?> showImportFromContactBottomSheet(
                             return const Center(
                                 child: Text("Ohh, contacts not found!"));
                           } else {
-                            final contacts =
-                                context.read<AddMyContactBloc>().nativeContacts;
+                            final contacts = context
+                                .read<AddContactInfoBloc>()
+                                .nativeContacts;
                             return ListView.builder(
                               itemCount: contacts.length,
                               shrinkWrap: true,
@@ -68,9 +69,15 @@ Future<Contact?> showImportFromContactBottomSheet(
                                         .primaryColor
                                         .withOpacity(0.1),
                                     title: Text(item.displayName),
-                                    subtitle: Text(item.phones.firstOrNull
-                                            ?.normalizedNumber ??
-                                        'Empty'),
+                                    subtitle: Text((item.phones.firstOrNull
+                                                    ?.normalizedNumber ??
+                                                '')
+                                            .isEmpty
+                                        ? (item.phones.firstOrNull?.number ??
+                                            'Empty')
+                                        : (item.phones.firstOrNull
+                                                ?.normalizedNumber ??
+                                            'Empty')),
                                     leading: CircleAvatar(
                                       backgroundColor:
                                           Theme.of(context).focusColor,

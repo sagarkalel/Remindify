@@ -1,4 +1,4 @@
-import 'package:Remindify/models/event_model.dart';
+import 'package:Remindify/models/event_info_model.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ class EventListTile extends StatelessWidget {
     required this.item,
   });
 
-  final EventModel item;
+  final EventInfoModel item;
 
   @override
   Widget build(BuildContext context) {

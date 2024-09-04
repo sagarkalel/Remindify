@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:Remindify/models/my_contact_model.dart';
+import 'package:Remindify/models/contact_info_model.dart';
 import 'package:Remindify/services/database_services.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,21 +9,22 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 part 'add_my_contact_event.dart';
 part 'add_my_contact_state.dart';
 
-class AddMyContactBloc extends Bloc<AddMyContactEvent, AddMyContactState> {
-  final MyContactModel? editMyContactData;
+class AddContactInfoBloc
+    extends Bloc<AddContactInfoEvent, AddContactInfoState> {
+  final ContactInfoModel? editContactInfoData;
   List<Contact> nativeContacts = [];
 
-  AddMyContactBloc({this.editMyContactData})
-      : super(AddMyContactInitialState()) {
+  AddContactInfoBloc({this.editContactInfoData})
+      : super(AddContactInfoInitialState()) {
     /// add contact-event to database
-    on<AddMyContactToDbEvent>(_addEventToDatabase);
-    on<UpdateMyContactFromDbEvent>(_updateEventInDatabase);
+    on<AddContactInfoToDb>(_addEventToDatabase);
+    on<UpdateContactInfoFromDb>(_updateEventInDatabase);
     on<GetNativeContacts>(_getNativeContacts);
   }
 
   /// get native contacts
   Future<void> _getNativeContacts(
-      GetNativeContacts event, Emitter<AddMyContactState> emit) async {
+      GetNativeContacts event, Emitter<AddContactInfoState> emit) async {
     emit(NativeContactsLoading());
     try {
       final contacts = await FlutterContacts.getContacts(
@@ -41,37 +42,37 @@ class AddMyContactBloc extends Bloc<AddMyContactEvent, AddMyContactState> {
 
   /// update contact-event in database
   Future<void> _updateEventInDatabase(
-      UpdateMyContactFromDbEvent event, Emitter<AddMyContactState> emit) async {
+      UpdateContactInfoFromDb event, Emitter<AddContactInfoState> emit) async {
     try {
-      emit(AddMyContactLoadingState());
-      if (event.myContactModel != editMyContactData) {
-        await event.databaseServices.updateContact(event.myContactModel);
+      emit(AddContactInfoLoadingState());
+      if (event.contactInfoModel != editContactInfoData) {
+        await event.databaseServices.updateContact(event.contactInfoModel);
       } else {
         log("Ohh!, There was no change to update.");
       }
 
       /// TODO: added custom delay temp, will have to remove later
       await Future.delayed(const Duration(seconds: 1));
-      emit(AddMyContactUpdatedState());
+      emit(ContactInfoUpdatedState());
     } catch (e) {
       log("Error while updating Event: $e");
-      emit(AddMyContactErrorState(e.toString()));
+      emit(ContactInfoErrorState(e.toString()));
     }
   }
 
   /// add contact-event to database
   static Future<void> _addEventToDatabase(
-      AddMyContactToDbEvent event, Emitter<AddMyContactState> emit) async {
+      AddContactInfoToDb event, Emitter<AddContactInfoState> emit) async {
     try {
-      emit(AddMyContactLoadingState());
-      await event.databaseServices.addContact(event.myContactModel);
+      emit(AddContactInfoLoadingState());
+      await event.databaseServices.addContact(event.contactInfoModel);
 
       /// TODO: added custom delay temp, will have to remove later
       await Future.delayed(const Duration(seconds: 1));
-      emit(AddMyContactAddedState());
+      emit(ContactInfoAddedState());
     } catch (e) {
       log("Error while adding Event: $e");
-      emit(AddMyContactErrorState(e.toString()));
+      emit(ContactInfoErrorState(e.toString()));
     }
   }
 }

@@ -7,7 +7,7 @@ sealed class HomeEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetchMyContactsFromDb extends HomeEvent {}
+class FetchContactsInfoFromDb extends HomeEvent {}
 
 class ScheduleEvents extends HomeEvent {
   final List<ScheduleTimeModel> times;
@@ -21,16 +21,16 @@ class ScheduleEvents extends HomeEvent {
 class ClearFilter extends HomeEvent {}
 
 class DeleteContact extends HomeEvent {
-  final MyContactModel myContactModel;
+  final ContactInfoModel contactInfoModel;
 
-  const DeleteContact(this.myContactModel);
+  const DeleteContact(this.contactInfoModel);
 
   @override
-  List<Object?> get props => [myContactModel];
+  List<Object?> get props => [contactInfoModel];
 }
 
 class AddFilter extends HomeEvent {
-  final FilterModel filterModel;
+  final FilterListModel filterModel;
 
   const AddFilter(this.filterModel);
 

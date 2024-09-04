@@ -1,6 +1,6 @@
 import 'package:Remindify/components/full_screen_loader.dart';
-import 'package:Remindify/models/my_contact_model.dart';
-import 'package:Remindify/pages/add_event_page/add_my_contact_page.dart';
+import 'package:Remindify/models/contact_info_model.dart';
+import 'package:Remindify/pages/add_contact_info_page/add_contact_info_page.dart';
 import 'package:Remindify/pages/dashboard/home_page/bloc/home_bloc.dart';
 import 'package:Remindify/pages/view_event_page/views/view_full_screen_image.dart';
 import 'package:Remindify/services/app_services.dart';
@@ -14,9 +14,9 @@ import '../../components/background_widget.dart';
 import 'views/event_list_tile.dart';
 
 class ViewEventPage extends StatelessWidget {
-  const ViewEventPage({super.key, required this.myContactModel});
+  const ViewEventPage({super.key, required this.contactInfoModel});
 
-  final MyContactModel myContactModel;
+  final ContactInfoModel contactInfoModel;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class ViewEventPage extends StatelessWidget {
           children: [
             Scaffold(
               appBar: AppBar(
-                title: Text(myContactModel.name),
+                title: Text(contactInfoModel.name),
                 actions: [
                   /// delete event contact
                   IconButton.filled(
@@ -52,8 +52,8 @@ class ViewEventPage extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                AddEventPage(editMyContactData: myContactModel),
+                            builder: (context) => AddContactInfoPage(
+                                editContactInfoData: contactInfoModel),
                           ));
                     },
                     icon: Icon(Icons.edit, color: kColorScheme.onPrimary),
@@ -77,16 +77,16 @@ class ViewEventPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(65)),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(65),
-                            onTap: myContactModel.image == null
+                            onTap: contactInfoModel.image == null
                                 ? null
                                 : () => viewFullScreenImage(
-                                    context, myContactModel.image!),
+                                    context, contactInfoModel.image!),
                             child: CircleAvatar(
                               maxRadius: 65,
-                              backgroundImage: myContactModel.image == null
+                              backgroundImage: contactInfoModel.image == null
                                   ? null
-                                  : MemoryImage(myContactModel.image!),
-                              child: myContactModel.image == null
+                                  : MemoryImage(contactInfoModel.image!),
+                              child: contactInfoModel.image == null
                                   ? Icon(
                                       Icons.person,
                                       size: 75,
@@ -109,12 +109,12 @@ class ViewEventPage extends StatelessWidget {
                                 Theme.of(context).primaryColor.withOpacity(0.1),
                             leading: const Icon(Icons.phone),
                             title: Text(
-                                myContactModel.phone == null ||
-                                        myContactModel.phone!.isEmpty
+                                contactInfoModel.phone == null ||
+                                        contactInfoModel.phone!.isEmpty
                                     ? 'Empty!'
-                                    : myContactModel.phone ?? '',
-                                style: myContactModel.phone == null ||
-                                        myContactModel.phone!.isEmpty
+                                    : contactInfoModel.phone ?? '',
+                                style: contactInfoModel.phone == null ||
+                                        contactInfoModel.phone!.isEmpty
                                     ? const TextStyle().copyWith(
                                         color: Theme.of(context)
                                             .hintColor
@@ -128,7 +128,7 @@ class ViewEventPage extends StatelessWidget {
                             .padXLeft(20),
                         const YGap(4),
                         Visibility(
-                          visible: myContactModel.events.isEmpty,
+                          visible: contactInfoModel.events.isEmpty,
                           child: Text(
                             "Events not found!",
                             style: Theme.of(context)
@@ -139,12 +139,12 @@ class ViewEventPage extends StatelessWidget {
                           ),
                         ).padXLeft(20),
                         ListView.builder(
-                          itemCount: myContactModel.events.length,
+                          itemCount: contactInfoModel.events.length,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemBuilder: (context, index) =>
-                              EventListTile(item: myContactModel.events[index]),
+                          itemBuilder: (context, index) => EventListTile(
+                              item: contactInfoModel.events[index]),
                         ),
                         const YGap(16),
 
@@ -166,10 +166,10 @@ class ViewEventPage extends StatelessWidget {
                                   .withOpacity(0.1),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Text(myContactModel.friendNote == null ||
-                                    myContactModel.friendNote!.isEmpty
+                            child: Text(contactInfoModel.friendNote == null ||
+                                    contactInfoModel.friendNote!.isEmpty
                                 ? 'Note not found!'
-                                : myContactModel.friendNote!),
+                                : contactInfoModel.friendNote!),
                           ),
                         ).padXXDefault,
                       ],
@@ -208,7 +208,7 @@ class ViewEventPage extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                context.read<HomeBloc>().add(DeleteContact(myContactModel));
+                context.read<HomeBloc>().add(DeleteContact(contactInfoModel));
                 Navigator.pop(context);
               },
               style: TextButton.styleFrom(

@@ -1,4 +1,4 @@
-import 'package:Remindify/models/my_contact_model.dart';
+import 'package:Remindify/models/contact_info_model.dart';
 import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
@@ -21,7 +21,7 @@ class ImportFromContactListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSelected = selectedContacts.contains(contact.id);
-    final item = MyContactModel.fromNativeContact(contact);
+    final item = ContactInfoModel.fromNativeContact(contact);
     return Card(
       child: CheckboxListTile(
         shape: RoundedRectangleBorder(

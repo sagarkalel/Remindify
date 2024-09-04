@@ -1,4 +1,4 @@
-import 'package:Remindify/models/my_contact_model.dart';
+import 'package:Remindify/models/contact_info_model.dart';
 import 'package:Remindify/pages/view_event_page/view_event_page.dart';
 import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/utils/extensions.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class HomePageListTile extends StatelessWidget {
   const HomePageListTile({super.key, required this.item});
 
-  final MyContactModel item;
+  final ContactInfoModel item;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class HomePageListTile extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ViewEventPage(myContactModel: item),
+                builder: (context) => ViewEventPage(contactInfoModel: item),
               ));
         },
         leading: CircleAvatar(

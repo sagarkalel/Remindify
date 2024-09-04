@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:Remindify/models/my_contact_model.dart';
+import 'package:Remindify/models/contact_info_model.dart';
 import 'package:Remindify/services/database_services.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +13,7 @@ class ImportNativeContactBloc
     extends Bloc<ImportContactEvent, ImportNativeContactState> {
   final List<String> selectedContacts = [];
   final List<Contact> allImportedContacts = [];
-  static final List<MyContactModel> _allMyContactsFromDatabase = [];
+  static final List<ContactInfoModel> _allContactInfoListFromDatabase = [];
 
   ImportNativeContactBloc() : super(NativeContactLoadingState()) {
     /// import contacts from native device
@@ -77,14 +77,14 @@ class ImportNativeContactBloc
     final isRequestGranted = await FlutterContacts.requestPermission();
     selectedContacts.clear();
     allImportedContacts.clear();
-    _allMyContactsFromDatabase.clear();
+    _allContactInfoListFromDatabase.clear();
     emit(NativeContactsPermissionRequestState(isRequestGranted));
 
     try {
       if (isRequestGranted) {
         emit(NativeContactLoadingState());
-        _allMyContactsFromDatabase.addAll(
-            await DatabaseServices.instance.getMyContactListFromLocalDb());
+        _allContactInfoListFromDatabase.addAll(
+            await DatabaseServices.instance.getContactInfoListFromLocalDb());
         final nativeContacts = await FlutterContacts.getContacts(
           withPhoto: true,
           withThumbnail: true,
@@ -94,7 +94,7 @@ class ImportNativeContactBloc
         /// contacts only which are not imported earlier
         final contactsOnlyWhichAreNotImportedEarlier =
             nativeContacts.where((contact) {
-          return !_allMyContactsFromDatabase
+          return !_allContactInfoListFromDatabase
               .any((element) => element.inBuildId == contact.id);
         }).toList();
 
@@ -129,7 +129,8 @@ class ImportNativeContactBloc
     try {
       /// checking new contacts to add
       final newNativeContactIds = selectedContacts.where((element) {
-        return !_allMyContactsFromDatabase.any((i) => i.inBuildId == element);
+        return !_allContactInfoListFromDatabase
+            .any((i) => i.inBuildId == element);
       }).toList();
 
       /// new native contacts which has to import
@@ -137,9 +138,9 @@ class ImportNativeContactBloc
           .where((element) => newNativeContactIds.contains(element.id))
           .toList();
 
-      /// parsing native contacts and converting in local [MyContactModel]
+      /// parsing native contacts and converting in local [ContactInfoModel]
       final parsedNewNativeContacts = newNativeContacts
-          .map((e) => MyContactModel.fromNativeContact(e))
+          .map((e) => ContactInfoModel.fromNativeContact(e))
           .toList();
 
       for (final item in parsedNewNativeContacts) {

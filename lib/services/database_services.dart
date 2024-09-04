@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:Remindify/models/event_model.dart';
-import 'package:Remindify/models/my_contact_model.dart';
+import 'package:Remindify/models/contact_info_model.dart';
+import 'package:Remindify/models/event_info_model.dart';
 import 'package:Remindify/models/schedule_time_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -83,7 +83,7 @@ class DatabaseServices {
   }
 
   /// add contact
-  Future<void> addContact(MyContactModel contactModel) async {
+  Future<void> addContact(ContactInfoModel contactModel) async {
     try {
       final db = await getDatabase();
 
@@ -174,7 +174,7 @@ class DatabaseServices {
   }
 
   /// update contact
-  Future<void> updateContact(MyContactModel contactModel) async {
+  Future<void> updateContact(ContactInfoModel contactModel) async {
     try {
       final db = await getDatabase();
 
@@ -209,7 +209,7 @@ class DatabaseServices {
   }
 
   /// delete contact
-  Future<void> deleteContact(MyContactModel contactModel) async {
+  Future<void> deleteContact(ContactInfoModel contactModel) async {
     final db = await getDatabase();
     try {
       await db.transaction((txn) async {
@@ -237,14 +237,14 @@ class DatabaseServices {
   }
 
   /// get all contact list
-  Future<List<MyContactModel>> getMyContactListFromLocalDb() async {
+  Future<List<ContactInfoModel>> getContactInfoListFromLocalDb() async {
     try {
       final db = await getDatabase();
 
       /// querying contacts from local db
       final contactMaps = await db.query(_mainTableName);
 
-      List<MyContactModel> contacts = [];
+      List<ContactInfoModel> contacts = [];
 
       for (final contactMap in contactMaps) {
         /// querying events from local db
@@ -253,10 +253,10 @@ class DatabaseServices {
           where: '$_contactIdColumnName = ?',
           whereArgs: [contactMap[_idColumnName]],
         );
-        final events = eventMaps.map((e) => EventModel.fromMap(e)).toList();
+        final events = eventMaps.map((e) => EventInfoModel.fromMap(e)).toList();
 
         /// inserting events in contact here
-        final contact = MyContactModel.fromMap({
+        final contact = ContactInfoModel.fromMap({
           ...contactMap,
           'events': events,
         });
@@ -270,14 +270,14 @@ class DatabaseServices {
   }
 
   /// get contact from id
-  Future<MyContactModel> getMyContactFromDbById(int id) async {
+  Future<ContactInfoModel> getContactInfoFromDbById(int id) async {
     try {
       final db = await getDatabase();
 
       /// querying contacts from local db
       final contactMaps = await db
           .query(_mainTableName, where: '$_idColumnName = ?', whereArgs: [id]);
-      return contactMaps.map((e) => MyContactModel.fromMap(e)).first;
+      return contactMaps.map((e) => ContactInfoModel.fromMap(e)).first;
     } catch (e) {
       throw Exception("error while fetching contacts from local DB by ID: $e");
     }

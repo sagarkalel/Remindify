@@ -1,7 +1,7 @@
 import 'package:Remindify/components/app_textfield.dart';
 import 'package:Remindify/components/background_widget.dart';
-import 'package:Remindify/models/filter_model.dart';
-import 'package:Remindify/models/my_contact_model.dart';
+import 'package:Remindify/models/contact_info_model.dart';
+import 'package:Remindify/models/filter_list_model.dart';
 import 'package:Remindify/pages/dashboard/settings/bloc/setting_bloc.dart';
 import 'package:Remindify/pages/import_from_contacts_page/import_native_contact_page.dart';
 import 'package:Remindify/utils/extensions.dart';
@@ -71,7 +71,7 @@ class HomePageView extends StatelessWidget {
                                 (value) {
                                   /// if value is true then only refresh data
                                   if (value == true) {
-                                    bloc.add(FetchMyContactsFromDb());
+                                    bloc.add(FetchContactsInfoFromDb());
                                   }
                                 },
                               );
@@ -128,7 +128,7 @@ class HomePageView extends StatelessWidget {
                                   .padXXDefault;
                             } else {
                               return HomePageList(
-                                myContacts: bloc.isSearchVisible
+                                contactInfoList: bloc.isSearchVisible
                                     ? bloc.inSearchContactList
                                     : bloc.filterAppliedContactList,
                               );

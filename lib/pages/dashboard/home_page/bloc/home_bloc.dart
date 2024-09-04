@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:Remindify/models/filter_model.dart';
-import 'package:Remindify/models/my_contact_model.dart';
+import 'package:Remindify/models/contact_info_model.dart';
+import 'package:Remindify/models/filter_list_model.dart';
 import 'package:Remindify/models/schedule_time_model.dart';
 import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/services/database_services.dart';
@@ -17,11 +17,11 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final List<MyContactModel> originalContactListFromDb = [];
-  final List<MyContactModel> filterAppliedContactList = [];
-  final List<MyContactModel> inSearchContactList = [];
+  final List<ContactInfoModel> originalContactListFromDb = [];
+  final List<ContactInfoModel> filterAppliedContactList = [];
+  final List<ContactInfoModel> inSearchContactList = [];
 
-  FilterModel appliedFilter = filterList.first;
+  FilterListModel appliedFilter = filterList.first;
   bool isSearchVisible = false;
   bool showPermissionWidget = false;
   final searchController = TextEditingController();
@@ -29,7 +29,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   HomeBloc() : super(HomeContactsLoadingState()) {
     /// get all local contacts
-    on<FetchMyContactsFromDb>(_fetchContactEventsFromDb);
+    on<FetchContactsInfoFromDb>(_fetchContactEventsFromDb);
     on<AddFilter>(_changeFilter);
     on<ClearFilter>(_clearFilter);
     on<ScheduleEvents>(_scheduleEvents);
@@ -109,11 +109,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   /// fetch contact-events from db
   Future<void> _fetchContactEventsFromDb(
-      FetchMyContactsFromDb event, Emitter<HomeState> emit) async {
+      FetchContactsInfoFromDb event, Emitter<HomeState> emit) async {
     try {
       emit(HomeContactsLoadingState());
       final myLocalContacts =
-          await DatabaseServices.instance.getMyContactListFromLocalDb();
+          await DatabaseServices.instance.getContactInfoListFromLocalDb();
       originalContactListFromDb.clear();
       originalContactListFromDb.addAll(myLocalContacts);
 
@@ -137,9 +137,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       DeleteContact event, Emitter<HomeState> emit) async {
     try {
       emit(ContactDeleteLoading());
-      await DatabaseServices.instance.deleteContact(event.myContactModel);
+      await DatabaseServices.instance.deleteContact(event.contactInfoModel);
       await Future.delayed(const Duration(seconds: 1));
-      add(FetchMyContactsFromDb());
+      add(FetchContactsInfoFromDb());
       emit(ContactDeletedSuccessfully());
     } catch (e) {
       log("Error while deleting contact: $e");
@@ -176,8 +176,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   /// apply filter logic
-  Future<List<MyContactModel>> _applyFilterLogic() async {
-    List<MyContactModel> sortedList = originalContactListFromDb;
+  Future<List<ContactInfoModel>> _applyFilterLogic() async {
+    List<ContactInfoModel> sortedList = originalContactListFromDb;
     switch (appliedFilter.value) {
       case 'default':
         final withEvents =

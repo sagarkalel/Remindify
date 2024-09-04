@@ -1,4 +1,4 @@
-import 'package:Remindify/models/filter_model.dart';
+import 'package:Remindify/models/filter_list_model.dart';
 import 'package:Remindify/pages/dashboard/home_page/bloc/home_bloc.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
@@ -13,7 +13,7 @@ class FilterBody extends StatefulWidget {
 }
 
 class _FilterBodyState extends State<FilterBody> {
-  FilterModel? selectedValue;
+  FilterListModel? selectedValue;
 
   @override
   void initState() {

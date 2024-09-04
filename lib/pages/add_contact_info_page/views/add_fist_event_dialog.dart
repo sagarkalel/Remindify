@@ -1,5 +1,5 @@
 import 'package:Remindify/components/app_textfield.dart';
-import 'package:Remindify/models/event_model.dart';
+import 'package:Remindify/models/event_info_model.dart';
 import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import '../../../utils/global_constants.dart';
 import 'event_dropdown.dart';
 
-Future<EventModel?> addFirstEventDialog(context,
+Future<EventInfoModel?> addFirstEventDialog(context,
     {List<EventLabel>? initialEventLabelList}) async {
   return showAdaptiveDialog(
     context: context,
@@ -156,7 +156,7 @@ Future<EventModel?> addFirstEventDialog(context,
                 onPressed: selectedDate == null
                     ? null
                     : () {
-                        final eventModel = EventModel(
+                        final eventModel = EventInfoModel(
                           label:
                               AppServices.stringToEventLabel[dropdownValue] ??
                                   EventLabel.custom,

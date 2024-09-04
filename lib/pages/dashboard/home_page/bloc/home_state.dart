@@ -10,7 +10,7 @@ abstract class HomeState extends Equatable {
 final class HomeContactsLoadingState extends HomeState {}
 
 final class FilterChangedState extends HomeState {
-  final FilterModel appliedFilter;
+  final FilterListModel appliedFilter;
 
   const FilterChangedState(this.appliedFilter);
 
@@ -19,12 +19,12 @@ final class FilterChangedState extends HomeState {
 }
 
 final class HomeContactsLoadedState extends HomeState {
-  final List<MyContactModel> myContacts;
+  final List<ContactInfoModel> contactInfoList;
 
-  const HomeContactsLoadedState(this.myContacts);
+  const HomeContactsLoadedState(this.contactInfoList);
 
   @override
-  List<Object> get props => [myContacts];
+  List<Object> get props => [contactInfoList];
 }
 
 final class HomeContactsErrorState extends HomeState {

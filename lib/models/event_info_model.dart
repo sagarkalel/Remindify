@@ -1,8 +1,8 @@
 import 'package:Remindify/services/app_services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
-class EventModel {
-  EventModel({
+class EventInfoModel {
+  EventInfoModel({
     required this.date,
     this.label = EventLabel.birthday,
     this.customLabel,
@@ -18,8 +18,8 @@ class EventModel {
   /// Custom label, if [label] is [EventLabel.custom].
   final String? customLabel;
 
-  factory EventModel.fromMap(Map<String, Object?> map) {
-    return EventModel(
+  factory EventInfoModel.fromMap(Map<String, Object?> map) {
+    return EventInfoModel(
       label: AppServices.stringToEventLabel[map['label'] as String? ?? ''] ??
           EventLabel.custom,
       customLabel: map['custom_label'] as String?,

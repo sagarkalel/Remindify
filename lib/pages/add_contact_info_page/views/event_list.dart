@@ -1,4 +1,4 @@
-import 'package:Remindify/models/event_model.dart';
+import 'package:Remindify/models/event_info_model.dart';
 import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
@@ -12,7 +12,7 @@ class EventList extends StatelessWidget {
     required this.onRemove,
   });
 
-  final List<EventModel> events;
+  final List<EventInfoModel> events;
   final Function(int index) onRemove;
 
   @override

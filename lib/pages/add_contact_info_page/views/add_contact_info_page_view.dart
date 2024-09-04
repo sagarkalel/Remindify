@@ -3,13 +3,13 @@ import 'dart:typed_data';
 import 'package:Remindify/components/app_textfield.dart';
 import 'package:Remindify/components/background_widget.dart';
 import 'package:Remindify/components/full_screen_loader.dart';
-import 'package:Remindify/models/event_model.dart';
-import 'package:Remindify/models/my_contact_model.dart';
-import 'package:Remindify/pages/add_event_page/bloc/add_my_contact_bloc.dart';
-import 'package:Remindify/pages/add_event_page/views/add_first_event_tile.dart';
-import 'package:Remindify/pages/add_event_page/views/add_fist_event_dialog.dart';
-import 'package:Remindify/pages/add_event_page/views/event_list.dart';
-import 'package:Remindify/pages/add_event_page/views/import_from_contact_bottomsheet.dart';
+import 'package:Remindify/models/contact_info_model.dart';
+import 'package:Remindify/models/event_info_model.dart';
+import 'package:Remindify/pages/add_contact_info_page/bloc/add_my_contact_bloc.dart';
+import 'package:Remindify/pages/add_contact_info_page/views/add_first_event_tile.dart';
+import 'package:Remindify/pages/add_contact_info_page/views/add_fist_event_dialog.dart';
+import 'package:Remindify/pages/add_contact_info_page/views/event_list.dart';
+import 'package:Remindify/pages/add_contact_info_page/views/import_from_contact_bottomsheet.dart';
 import 'package:Remindify/pages/view_event_page/views/view_full_screen_image.dart';
 import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/services/database_services.dart';
@@ -22,14 +22,14 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import '../../dashboard/home_page/bloc/home_bloc.dart';
 import 'edit_profile_image.dart';
 
-class AddMyContactPageView extends StatefulWidget {
-  const AddMyContactPageView({super.key});
+class AddContactInfoPageView extends StatefulWidget {
+  const AddContactInfoPageView({super.key});
 
   @override
-  State<AddMyContactPageView> createState() => _AddMyContactPageViewState();
+  State<AddContactInfoPageView> createState() => _AddContactInfoPageViewState();
 }
 
-class _AddMyContactPageViewState extends State<AddMyContactPageView> {
+class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
   /// controllers
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -45,13 +45,13 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// other variables
-  final List<EventModel> _events = [];
+  final List<EventInfoModel> _events = [];
 
   @override
   void initState() {
     super.initState();
     final editContactModelData =
-        context.read<AddMyContactBloc>().editMyContactData;
+        context.read<AddContactInfoBloc>().editContactInfoData;
     if (editContactModelData != null) {
       nameController.text = editContactModelData.name;
       phoneController.text = editContactModelData.phone ?? '';
@@ -84,27 +84,27 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
           SafeArea(
             child: Form(
               key: _formKey,
-              child: BlocConsumer<AddMyContactBloc, AddMyContactState>(
+              child: BlocConsumer<AddContactInfoBloc, AddContactInfoState>(
                 listener: (context, state) {
-                  if (state is AddMyContactAddedState) {
+                  if (state is ContactInfoAddedState) {
                     /// go back to home when updating event
                     Navigator.popUntil(
                         context, ModalRoute.withName('/dashboard'));
 
                     /// refresh contacts in home page
-                    context.read<HomeBloc>().add(FetchMyContactsFromDb());
+                    context.read<HomeBloc>().add(FetchContactsInfoFromDb());
                     AppServices.showSnackBar(
                         context, "Event added successfully!");
-                  } else if (state is AddMyContactUpdatedState) {
+                  } else if (state is ContactInfoUpdatedState) {
                     /// go back to home when updating event
                     Navigator.popUntil(
                         context, ModalRoute.withName('/dashboard'));
 
                     /// refresh contacts in home page
-                    context.read<HomeBloc>().add(FetchMyContactsFromDb());
+                    context.read<HomeBloc>().add(FetchContactsInfoFromDb());
                     AppServices.showSnackBar(
                         context, "Event updated successfully!");
-                  } else if (state is AddMyContactErrorState) {
+                  } else if (state is ContactInfoErrorState) {
                     AppServices.showSnackBar(
                         context, "Something went wrong, please try again!");
                   }
@@ -201,14 +201,23 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
                                       final result =
                                           await showImportFromContactBottomSheet(
                                         context,
-                                        context.read<AddMyContactBloc>(),
+                                        context.read<AddContactInfoBloc>(),
                                       );
                                       // return if result is null
                                       if (result == null) return;
                                       // assign first phone number to phone controller
-                                      phoneController.text = result.phones
-                                              .firstOrNull?.normalizedNumber ??
-                                          '';
+                                      phoneController.text = (result
+                                                      .phones
+                                                      .firstOrNull
+                                                      ?.normalizedNumber ??
+                                                  '')
+                                              .isEmpty
+                                          ? (result
+                                                  .phones.firstOrNull?.number ??
+                                              '')
+                                          : (result.phones.firstOrNull
+                                                  ?.normalizedNumber ??
+                                              '');
                                       // assign name to name controller if it is empty
                                       if (nameController.text.isEmpty) {
                                         nameController.text =
@@ -234,9 +243,10 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
                                     }
                                   },
                                   validator: (val) {
+                                    /// here added 14 because after importing 10 digits native contact, by defaults it is adding some brackets and all
                                     if (val != null &&
                                         val.isNotEmpty &&
-                                        (val.trim().length > 13 ||
+                                        (val.trim().length > 14 ||
                                             val.trim().length < 10)) {
                                       return "Please enter valid phone number!";
                                     }
@@ -307,16 +317,18 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  final bloc = context.read<AddMyContactBloc>();
-                                  bloc.editMyContactData == null
+                                  final bloc =
+                                      context.read<AddContactInfoBloc>();
+                                  bloc.editContactInfoData == null
                                       // add event
                                       ? saveAndAddEvent(bloc)
                                       // update event
                                       : saveAndUpdateEvent(bloc);
                                 },
-                                child: Text((state is AddMyContactLoadingState)
-                                    ? "Saving..."
-                                    : "Save"),
+                                child: Text(
+                                    (state is AddContactInfoLoadingState)
+                                        ? "Saving..."
+                                        : "Save"),
                               ).expand,
                             ],
                           ).padXXDefault,
@@ -324,7 +336,7 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
                         ],
                       ),
                       Visibility(
-                        visible: state is AddMyContactLoadingState,
+                        visible: state is AddContactInfoLoadingState,
                         child: const FullScreenLoader(),
                       ),
                     ],
@@ -338,14 +350,14 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
     );
   }
 
-  /// save myContactModel
-  void saveAndAddEvent(AddMyContactBloc bloc) {
+  /// save contactInfoModel
+  void saveAndAddEvent(AddContactInfoBloc bloc) {
     if (_formKey.currentState?.validate() != true) return;
     if (_events.isEmpty) {
       AppServices.showSnackBar(context, 'Please add event!');
       return;
     }
-    final myContactModel = MyContactModel(
+    final contactInfoModel = ContactInfoModel(
       name: nameController.text.trim(),
       events: _events,
       phone: phoneController.text.trim(),
@@ -353,33 +365,33 @@ class _AddMyContactPageViewState extends State<AddMyContactPageView> {
       friendNote: noteController.text.trim(),
     );
     FocusScope.of(context).unfocus();
-    bloc.add(AddMyContactToDbEvent(
+    bloc.add(AddContactInfoToDb(
       databaseServices: DatabaseServices.instance,
-      myContactModel: myContactModel,
+      contactInfoModel: contactInfoModel,
     ));
   }
 
-  /// update myContactModel
-  void saveAndUpdateEvent(AddMyContactBloc bloc) {
+  /// update contactInfoModel
+  void saveAndUpdateEvent(AddContactInfoBloc bloc) {
     if (_formKey.currentState?.validate() != true) return;
     if (_events.isEmpty) {
       AppServices.showSnackBar(context, 'Please add event!');
       return;
     }
 
-    final myContactModel = MyContactModel(
+    final contactInfoModel = ContactInfoModel(
       name: nameController.text.trim(),
       events: _events,
       phone: phoneController.text.trim(),
       image: profileImage,
       friendNote: noteController.text.trim(),
-      id: bloc.editMyContactData!.id,
-      inBuildId: bloc.editMyContactData!.inBuildId,
+      id: bloc.editContactInfoData!.id,
+      inBuildId: bloc.editContactInfoData!.inBuildId,
     );
     FocusScope.of(context).unfocus();
-    bloc.add(UpdateMyContactFromDbEvent(
+    bloc.add(UpdateContactInfoFromDb(
       databaseServices: DatabaseServices.instance,
-      myContactModel: myContactModel,
+      contactInfoModel: contactInfoModel,
     ));
   }
 

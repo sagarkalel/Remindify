@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           create: (context) => SettingBloc()..add(LoadScheduledTimes()),
         ),
         BlocProvider(
-          create: (context) => HomeBloc()..add(FetchMyContactsFromDb()),
+          create: (context) => HomeBloc()..add(FetchContactsInfoFromDb()),
         ),
         BlocProvider(create: (context) => DashboardBloc()),
       ],

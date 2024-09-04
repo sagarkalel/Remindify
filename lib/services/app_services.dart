@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:Remindify/models/event_model.dart';
+import 'package:Remindify/models/event_info_model.dart';
 import 'package:Remindify/models/schedule_time_model.dart';
 import 'package:Remindify/pages/view_event_page/view_event_page.dart';
 import 'package:Remindify/services/database_services.dart';
@@ -43,10 +43,10 @@ class AppServices {
 
   /// get display name from contact name model
   static String getName(Name name) {
-    String prefix = name.prefix.isEmpty ? '' : '${name.prefix} ';
-    String first = name.first.isEmpty ? '' : '${name.first} ';
-    String middle = name.middle.isEmpty ? '' : '${name.middle} ';
-    String last = name.last;
+    String prefix = name.prefix.isEmpty ? '' : '${name.prefix.trim()} ';
+    String first = name.first.isEmpty ? '' : '${name.first.trim()} ';
+    String middle = name.middle.isEmpty ? '' : '${name.middle.trim()} ';
+    String last = name.last.trim();
     return prefix + first + middle + last;
   }
 
@@ -61,10 +61,10 @@ class AppServices {
   }
 
   /// get list of event model from phone contact events
-  static List<EventModel> getEvents(List<Event> events) {
+  static List<EventInfoModel> getEvents(List<Event> events) {
     if (events.isEmpty) return [];
     return events.map((e) {
-      return EventModel(
+      return EventInfoModel(
           date: getFormattedDateFromEvent(e),
           label: e.label,
           customLabel: e.customLabel);
@@ -120,7 +120,8 @@ class AppServices {
   }
 
   /// get closure event and if it is empty then return null
-  static EventModel? getClosureEventFromEvents(List<EventModel> events) {
+  static EventInfoModel? getClosureEventFromEvents(
+      List<EventInfoModel> events) {
     if (events.isEmpty) return null;
     final DateTime now = DateTime.now();
 
@@ -146,7 +147,7 @@ class AppServices {
     }).toList();
 
     /// Pair adjusted dates with events
-    List<MapEntry<DateTime, EventModel>> pairedList = [];
+    List<MapEntry<DateTime, EventInfoModel>> pairedList = [];
     for (int i = 0; i < events.length; i++) {
       pairedList.add(MapEntry(adjustedDates[i], events[i]));
     }
@@ -155,15 +156,15 @@ class AppServices {
     pairedList.sort((a, b) => a.key.compareTo(b.key));
 
     /// Get the event with the closest upcoming date
-    EventModel closestEvent = pairedList.first.value;
+    EventInfoModel closestEvent = pairedList.first.value;
 
     return closestEvent;
   }
 
   /// get closure date occurrence
-  static String getClosureEventDateWithLabel(List<EventModel> events) {
+  static String getClosureEventDateWithLabel(List<EventInfoModel> events) {
     /// Get the event with the closest upcoming date
-    EventModel? closestEvent = getClosureEventFromEvents(events);
+    EventInfoModel? closestEvent = getClosureEventFromEvents(events);
     if (closestEvent == null) return 'No event found!';
     DateTime closestDate = dateFormat.parse(closestEvent.date);
     return '${dateFormat.format(closestDate)} (${(eventLabelToString[closestEvent.label] == eventLabelToString[EventLabel.custom]) ? closestEvent.customLabel : (eventLabelToString[closestEvent.label] ?? '')})';
@@ -194,8 +195,9 @@ class AppServices {
   }
 
   /// get days left until next date from closure event
-  static int? getDaysUntilNextDateFromClosureEvent(List<EventModel> events) {
-    EventModel? closestEvent = getClosureEventFromEvents(events);
+  static int? getDaysUntilNextDateFromClosureEvent(
+      List<EventInfoModel> events) {
+    EventInfoModel? closestEvent = getClosureEventFromEvents(events);
 
     /// if events are empty then return null
     if (closestEvent == null) return null;
@@ -222,7 +224,7 @@ class AppServices {
 
   /// schedule events
   static Future<void> scheduleEventNotifications({
-    required List<EventModel> events,
+    required List<EventInfoModel> events,
     required String name,
     required int contactId,
     required List<ScheduleTimeModel> times,
@@ -322,16 +324,12 @@ class AppServices {
     log('Notification payload: $payload');
     try {
       final int contactId = int.parse(payload.split('&&').first);
-      final myContact =
-          await DatabaseServices.instance.getMyContactFromDbById(contactId);
+      final contactInfo =
+          await DatabaseServices.instance.getContactInfoFromDbById(contactId);
 
       /// navigating to view event page
-      if (navigatorKey.currentState == null) {
-        showSnackBar(navigatorKey.currentContext, 'Something went wrong!');
-        return log("Navigator key's context is null");
-      }
       navigatorKey.currentState?.push(MaterialPageRoute(
-        builder: (context) => ViewEventPage(myContactModel: myContact),
+        builder: (context) => ViewEventPage(contactInfoModel: contactInfo),
       ));
     } catch (e) {
       log("Error while handling notification onTap: $e");

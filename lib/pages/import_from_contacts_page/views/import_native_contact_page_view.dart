@@ -47,7 +47,7 @@ class ImportNativeContactPageView extends StatelessWidget {
                   } else {
                     final bloc = context.read<ImportNativeContactBloc>();
                     return ImportNativeContactList(
-                      nativeContacts: bloc.allImportedContacts,
+                      allImportedContacts: bloc.allImportedContacts,
                       selectedContacts: bloc.selectedContacts,
                     );
                   }

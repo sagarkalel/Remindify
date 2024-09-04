@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:Remindify/models/schedule_time_model.dart';
 import 'package:Remindify/services/app_services.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -35,7 +36,10 @@ class NotificationServices {
         onDidReceiveNotificationResponse: (details) async {
           String? payload = details.payload;
           if (payload == null) return;
-          await AppServices.handleNotificationTap(payload);
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            //TODO: uncomment bellow function if it is not working properly
+            await AppServices.handleNotificationTap(payload);
+          });
         },
       );
     } catch (e) {

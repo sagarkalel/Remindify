@@ -1,13 +1,13 @@
 part of 'home_page_view.dart';
 
 class HomePageList extends StatelessWidget {
-  const HomePageList({super.key, required this.myContacts});
+  const HomePageList({super.key, required this.contactInfoList});
 
-  final List<MyContactModel> myContacts;
+  final List<ContactInfoModel> contactInfoList;
 
   @override
   Widget build(BuildContext context) {
-    if (myContacts.isEmpty) {
+    if (contactInfoList.isEmpty) {
       return const Center(child: Text("No contacts found!"));
     }
     return ExtendedNestedScrollView(
@@ -20,7 +20,7 @@ class HomePageList extends StatelessWidget {
             children: [
               const YGap(16),
               Text(
-                "Upcoming Events (${myContacts.length})",
+                "Upcoming Events (${contactInfoList.length})",
                 style: Theme.of(context).textTheme.titleLarge,
               ).padXXDefault
             ],
@@ -36,8 +36,8 @@ class HomePageList extends StatelessWidget {
                 top: 4,
                 bottom: getScreenY(context) * 0.15),
             sliver: SliverList.builder(
-              itemCount: myContacts.length,
-              itemBuilder: (_, i) => HomePageListTile(item: myContacts[i]),
+              itemCount: contactInfoList.length,
+              itemBuilder: (_, i) => HomePageListTile(item: contactInfoList[i]),
             ),
           )
         ],
