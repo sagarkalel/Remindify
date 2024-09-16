@@ -2,12 +2,14 @@ import 'package:Remindify/components/app_textfield.dart';
 import 'package:Remindify/components/background_widget.dart';
 import 'package:Remindify/models/schedule_time_model.dart';
 import 'package:Remindify/pages/dashboard/home_page/bloc/home_bloc.dart';
+import 'package:Remindify/services/google_drive_sync.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../bloc/setting_bloc.dart';
 
@@ -78,7 +80,40 @@ class SettingView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: getScreenY(context) * 0.15),
+                    const YGap(16),
+                    Text("Sync & Cloud backup",
+                        style: Theme.of(context).textTheme.titleLarge),
+                    const YGap(8),
+                    Column(
+                      children: [
+                        const Text(
+                            "Sign in with Google to sync your events and to enable cloud backup."),
+                        const YGap(8),
+                        ElevatedButton(
+                            onPressed: () async {
+                              final syncService = GoogleDriveSync(
+                                  bloc: context.read<HomeBloc>());
+                              final result = await syncService.signIn();
+                              if (result) syncService.syncData();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: kColorScheme.onPrimary,
+                              foregroundColor: kColorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  side: BorderSide(
+                                      color: kColorScheme.inversePrimary)),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                FaIcon(FontAwesomeIcons.google),
+                                Text("Sign in with Google"),
+                              ],
+                            )),
+                      ],
+                    ),
+                    const SizedBox(height: kToolbarHeight),
                   ],
                 ],
               );

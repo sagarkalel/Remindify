@@ -9,7 +9,14 @@ abstract class ImportContactEvent extends Equatable {
 
 class StoreNativeContactsInDb extends ImportContactEvent {}
 
-class ImportNativeContacts extends ImportContactEvent {}
+class ImportNativeContacts extends ImportContactEvent {
+  final HomeBloc homeBloc;
+
+  const ImportNativeContacts({required this.homeBloc});
+
+  @override
+  List<Object?> get props => [homeBloc];
+}
 
 class ToggleNativeContacts extends ImportContactEvent {
   final String contactId;

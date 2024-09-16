@@ -8,6 +8,7 @@ class ContactInfoModel {
   const ContactInfoModel({
     required this.name,
     required this.events,
+    required this.lastModified,
     this.friendNote,
     this.image,
     this.inBuildId,
@@ -20,6 +21,7 @@ class ContactInfoModel {
   final String? friendNote, phone, inBuildId;
   final List<EventInfoModel> events;
   final Uint8List? image;
+  final DateTime lastModified;
 
   /// while extracting data from map
   factory ContactInfoModel.fromMap(Map<String, Object?> map) {
@@ -30,6 +32,8 @@ class ContactInfoModel {
       friendNote: map['friend_note'] as String?,
       image: map['image'] as Uint8List?,
       phone: map['phone'] as String?,
+      lastModified: DateTime.parse((map['last_modified'] as String?) ??
+          DateTime.now().toIso8601String()),
       events:
           map['events'] == null ? [] : (map['events'] as List<EventInfoModel>),
     );
@@ -45,6 +49,7 @@ class ContactInfoModel {
       image: contact.photoOrThumbnail,
       phone: AppServices.getPhoneNumber(contact.phones),
       events: AppServices.getEvents(contact.events),
+      lastModified: DateTime.now(),
     );
   }
 
@@ -56,6 +61,7 @@ class ContactInfoModel {
       'image': image,
       'in_build_id': inBuildId,
       'phone': phone,
+      'last_modified': lastModified.toIso8601String(),
     };
   }
 }

@@ -16,9 +16,9 @@ class AddContactInfoBloc
 
   AddContactInfoBloc({this.editContactInfoData})
       : super(AddContactInfoInitialState()) {
-    /// add contact-event to database
-    on<AddContactInfoToDb>(_addEventToDatabase);
-    on<UpdateContactInfoFromDb>(_updateEventInDatabase);
+    /// add contact info model to database
+    on<AddContactInfoToDb>(_addContactInfoToDb);
+    on<UpdateContactInfoFromDb>(_updateContactInfoInDb);
     on<GetNativeContacts>(_getNativeContacts);
   }
 
@@ -41,7 +41,7 @@ class AddContactInfoBloc
   }
 
   /// update contact-event in database
-  Future<void> _updateEventInDatabase(
+  Future<void> _updateContactInfoInDb(
       UpdateContactInfoFromDb event, Emitter<AddContactInfoState> emit) async {
     try {
       emit(AddContactInfoLoadingState());
@@ -61,7 +61,7 @@ class AddContactInfoBloc
   }
 
   /// add contact-event to database
-  static Future<void> _addEventToDatabase(
+  static Future<void> _addContactInfoToDb(
       AddContactInfoToDb event, Emitter<AddContactInfoState> emit) async {
     try {
       emit(AddContactInfoLoadingState());

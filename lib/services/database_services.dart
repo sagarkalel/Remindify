@@ -15,6 +15,7 @@ class DatabaseServices {
   static const _nameColumnName = 'name';
   static const _inBuildIdColumnName = 'in_build_id';
   static const _friendNoteColumnName = 'friend_note';
+  static const _lastModified = 'last_modified';
   static const _imageColumnName = 'image';
   static const _idColumnName = 'id';
   static const _phoneColumnName = 'phone';
@@ -43,6 +44,7 @@ class DatabaseServices {
         CREATE TABLE $_mainTableName(
         $_idColumnName INTEGER PRIMARY KEY AUTOINCREMENT,
         $_nameColumnName TEXT NOT NULL,
+        $_lastModified TEXT,
         $_inBuildIdColumnName TEXT,
         $_friendNoteColumnName TEXT,
         $_phoneColumnName TEXT,

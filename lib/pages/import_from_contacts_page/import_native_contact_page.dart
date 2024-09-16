@@ -1,3 +1,4 @@
+import 'package:Remindify/pages/dashboard/home_page/bloc/home_bloc.dart';
 import 'package:Remindify/pages/import_from_contacts_page/bloc/import_native_contact_bloc.dart';
 import 'package:Remindify/pages/import_from_contacts_page/views/import_native_contact_page_view.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,8 @@ class ImportNativeContactPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          ImportNativeContactBloc()..add(ImportNativeContacts()),
+      create: (context) => ImportNativeContactBloc()
+        ..add(ImportNativeContacts(homeBloc: context.read<HomeBloc>())),
       child: const ImportNativeContactPageView(),
     );
   }

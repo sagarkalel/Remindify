@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:Remindify/models/contact_info_model.dart';
+import 'package:Remindify/pages/dashboard/home_page/bloc/home_bloc.dart';
 import 'package:Remindify/services/database_services.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,8 +84,9 @@ class ImportNativeContactBloc
     try {
       if (isRequestGranted) {
         emit(NativeContactLoadingState());
-        _allContactInfoListFromDatabase.addAll(
-            await DatabaseServices.instance.getContactInfoListFromLocalDb());
+        // DatabaseServices.instance.getContactInfoListFromLocalDb()
+        _allContactInfoListFromDatabase
+            .addAll(await event.homeBloc.getContactInfoList());
         final nativeContacts = await FlutterContacts.getContacts(
           withPhoto: true,
           withThumbnail: true,

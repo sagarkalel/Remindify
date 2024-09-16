@@ -321,9 +321,9 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
                                       context.read<AddContactInfoBloc>();
                                   bloc.editContactInfoData == null
                                       // add event
-                                      ? saveAndAddEvent(bloc)
+                                      ? addContactInfo(bloc)
                                       // update event
-                                      : saveAndUpdateEvent(bloc);
+                                      : updateContactInfo(bloc);
                                 },
                                 child: Text(
                                     (state is AddContactInfoLoadingState)
@@ -351,7 +351,7 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
   }
 
   /// save contactInfoModel
-  void saveAndAddEvent(AddContactInfoBloc bloc) {
+  void addContactInfo(AddContactInfoBloc bloc) {
     if (_formKey.currentState?.validate() != true) return;
     if (_events.isEmpty) {
       AppServices.showSnackBar(context, 'Please add event!');
@@ -363,6 +363,7 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
       phone: phoneController.text.trim(),
       image: profileImage,
       friendNote: noteController.text.trim(),
+      lastModified: DateTime.now(),
     );
     FocusScope.of(context).unfocus();
     bloc.add(AddContactInfoToDb(
@@ -372,7 +373,7 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
   }
 
   /// update contactInfoModel
-  void saveAndUpdateEvent(AddContactInfoBloc bloc) {
+  void updateContactInfo(AddContactInfoBloc bloc) {
     if (_formKey.currentState?.validate() != true) return;
     if (_events.isEmpty) {
       AppServices.showSnackBar(context, 'Please add event!');
@@ -387,6 +388,7 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
       friendNote: noteController.text.trim(),
       id: bloc.editContactInfoData!.id,
       inBuildId: bloc.editContactInfoData!.inBuildId,
+      lastModified: DateTime.now(),
     );
     FocusScope.of(context).unfocus();
     bloc.add(UpdateContactInfoFromDb(

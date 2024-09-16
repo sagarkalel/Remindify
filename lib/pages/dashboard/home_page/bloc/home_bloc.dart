@@ -107,6 +107,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
+  /// fetch contact info model list
+  Future<List<ContactInfoModel>> getContactInfoList() async {
+    try {
+      return await DatabaseServices.instance.getContactInfoListFromLocalDb();
+    } catch (e) {
+      log("Error while getting contacts from db: $e");
+      return [];
+    }
+  }
+
   /// fetch contact-events from db
   Future<void> _fetchContactEventsFromDb(
       FetchContactsInfoFromDb event, Emitter<HomeState> emit) async {
