@@ -308,7 +308,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final exactAlarmPermission =
           await Permission.scheduleExactAlarm.isGranted;
       showPermissionWidget = !notificationPermission || !exactAlarmPermission;
-      log("this is showPermissionWidget variable state: $showPermissionWidget");
+      debugPrint(
+          "this is showPermissionWidget variable state: $showPermissionWidget");
       emit(NotificationPermissionCheckState(notificationPermission));
     } catch (e) {
       log("Error while checking permission widget: $e");

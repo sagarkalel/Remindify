@@ -27,6 +27,8 @@ final class ContactInfoAddedState extends AddContactInfoState {}
 
 final class ContactInfoUpdatedState extends AddContactInfoState {}
 
+final class ContactPermissionDeniedState extends AddContactInfoState {}
+
 final class ContactInfoErrorState extends AddContactInfoState {
   final String errorMessage;
 

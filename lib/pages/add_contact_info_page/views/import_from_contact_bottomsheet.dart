@@ -1,4 +1,6 @@
+import 'package:Remindify/components/contact_permission_denied_widget.dart';
 import 'package:Remindify/pages/add_contact_info_page/bloc/add_my_contact_bloc.dart';
+import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +40,8 @@ Future<Contact?> showImportFromContactBottomSheet(
                             return const Center(
                                 child: CircularProgressIndicator());
                           } else if (state is NativeContactsFailure) {
+                            AppServices.showSnackBar(context,
+                                "Something went wrong, please try again!");
                             return const Center(
                               child: Text(
                                   "Something went wrong, please try again!"),
@@ -46,6 +50,11 @@ Future<Contact?> showImportFromContactBottomSheet(
                               state.contacts.isEmpty) {
                             return const Center(
                                 child: Text("Ohh, contacts not found!"));
+                          } else if (state is ContactPermissionDeniedState) {
+                            return ContactPermissionDeniedWidget(
+                              onPermissionGranted: () =>
+                                  bloc.add(GetNativeContacts()),
+                            );
                           } else {
                             final contacts = context
                                 .read<AddContactInfoBloc>()

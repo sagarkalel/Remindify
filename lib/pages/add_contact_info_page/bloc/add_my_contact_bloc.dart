@@ -16,10 +16,11 @@ class AddContactInfoBloc
 
   AddContactInfoBloc({this.editContactInfoData})
       : super(AddContactInfoInitialState()) {
+    on<GetNativeContacts>(_getNativeContacts);
+
     /// add contact info model to database
     on<AddContactInfoToDb>(_addContactInfoToDb);
     on<UpdateContactInfoFromDb>(_updateContactInfoInDb);
-    on<GetNativeContacts>(_getNativeContacts);
   }
 
   /// get native contacts
@@ -27,6 +28,12 @@ class AddContactInfoBloc
       GetNativeContacts event, Emitter<AddContactInfoState> emit) async {
     emit(NativeContactsLoading());
     try {
+      final result = await FlutterContacts.requestPermission();
+      log("contact permission status: $result");
+      if (!result) {
+        emit(ContactPermissionDeniedState());
+        return;
+      }
       final contacts = await FlutterContacts.getContacts(
         withPhoto: true,
         withThumbnail: true,
