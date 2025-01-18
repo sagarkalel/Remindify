@@ -20,14 +20,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final List<ContactInfoModel> originalContactListFromDb = [];
   final List<ContactInfoModel> filterAppliedContactList = [];
   final List<ContactInfoModel> inSearchContactList = [];
+  final List<ContactInfoModel> selectedContactList = [];
 
   FilterListModel appliedFilter = filterList.first;
   bool isSearchVisible = false;
   bool showPermissionWidget = false;
+  bool isSelectedView = false;
   final searchController = TextEditingController();
   final searchFocusNode = FocusNode();
 
-  HomeBloc() : super(HomeContactsLoadingState()) {
+  HomeBloc() : super(HomeContactsInitialState()) {
     /// get all local contacts
     on<FetchContactsInfoFromDb>(_fetchContactEventsFromDb);
     on<AddFilter>(_changeFilter);
@@ -38,6 +40,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<ClearSearch>(_clearSearch);
     on<CheckPermissions>(_checkPermissionWidget);
     on<DeleteContact>(_deleteContact);
+    on<ToggleSelectedView>(_toggleSelectedView);
+    on<AddItemToSelectedList>(_addItemToSelectedList);
+    on<RemoveItemFromSelectedList>(_removeItemFromSelectedList);
+    on<DeleteSelectedContacts>(_deleteSelectedContacts);
   }
 
   /// toggle search
@@ -124,6 +130,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(HomeContactsLoadingState());
       final myLocalContacts =
           await DatabaseServices.instance.getContactInfoListFromLocalDb();
+      //! await Future.delayed(const Duration(seconds: 2));
       originalContactListFromDb.clear();
       originalContactListFromDb.addAll(myLocalContacts);
 
@@ -148,6 +155,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       emit(ContactDeleteLoading());
       await DatabaseServices.instance.deleteContact(event.contactInfoModel);
+      //! custom delay added
       await Future.delayed(const Duration(seconds: 1));
       add(FetchContactsInfoFromDb());
       emit(ContactDeletedSuccessfully());
@@ -302,9 +310,41 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       showPermissionWidget = !notificationPermission || !exactAlarmPermission;
       log("this is showPermissionWidget variable state: $showPermissionWidget");
       emit(NotificationPermissionCheckState(notificationPermission));
-      emit(ExactAlarmPermissionCheckState(exactAlarmPermission));
     } catch (e) {
       log("Error while checking permission widget: $e");
     }
+  }
+
+  Future<void> _toggleSelectedView(
+      ToggleSelectedView event, Emitter<HomeState> emit) async {
+    isSelectedView = event.enableSelectedView;
+    if (!isSelectedView) {
+      selectedContactList.clear();
+      emit(ItemAddedInSelectedList(selectedContactList.length));
+    }
+    emit(ToggleSelectedViewState(isSelectedView));
+  }
+
+  Future<void> _addItemToSelectedList(
+      AddItemToSelectedList event, Emitter<HomeState> emit) async {
+    final isAlreadyExist =
+        selectedContactList.any((e) => e.id == event.item.id);
+    if (!isAlreadyExist) selectedContactList.add(event.item);
+    emit(ItemAddedInSelectedList(selectedContactList.length));
+  }
+
+  Future<void> _removeItemFromSelectedList(
+      RemoveItemFromSelectedList event, Emitter<HomeState> emit) async {
+    selectedContactList.remove(event.item);
+    if (selectedContactList.isEmpty) isSelectedView = false;
+    emit(ItemAddedInSelectedList(selectedContactList.length));
+  }
+
+  Future<void> _deleteSelectedContacts(
+      DeleteSelectedContacts event, Emitter<HomeState> emit) async {
+    for (var e in selectedContactList) {
+      await DatabaseServices.instance.deleteContact(e);
+    }
+    add(FetchContactsInfoFromDb());
   }
 }

@@ -15,74 +15,81 @@ class CustomNavBar extends StatefulWidget {
 class _CustomNavBarState extends State<CustomNavBar> {
   @override
   Widget build(BuildContext context) {
-    return ClipPath(
-      clipper: NavBarCustomClipper(),
-      child: Container(
-        margin: const EdgeInsets.only(top: 8),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.greenAccent, kColorScheme.inversePrimary],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).shadowColor,
-              blurRadius: 8,
-              offset: const Offset(-4, 4),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ClipPath(
+        clipper: _NavBarCustomClipper(),
+        child: Container(
+          margin: const EdgeInsets.only(top: 8),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.greenAccent, kColorScheme.inversePrimary],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-          ],
-        ),
-        child: BlocBuilder<DashboardBloc, DashboardState>(
-          builder: (context, state) {
-            final bloc = context.read<DashboardBloc>();
-            final currentIndex = bloc.currentNavBarIndex;
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  onPressed: currentIndex == 0
-                      ? null
-                      : () => bloc.add(OnNavIndexChanged(currentIndex)),
-                  style: ElevatedButton.styleFrom(
-                    disabledForegroundColor: kColorScheme.primary,
-                    foregroundColor: Theme.of(context).disabledColor,
-                    backgroundColor: Colors.transparent,
-                    disabledBackgroundColor: Colors.transparent,
-                    overlayColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    elevation: 0,
-                  ),
-                  child: Icon(Icons.home, size: currentIndex == 1 ? 32 : 40),
-                ).expand,
-                const SizedBox(width: 65),
-                ElevatedButton(
-                  onPressed: currentIndex == 1
-                      ? null
-                      : () => bloc.add(OnNavIndexChanged(currentIndex)),
-                  style: ElevatedButton.styleFrom(
-                    disabledForegroundColor: kColorScheme.primary,
-                    foregroundColor: Theme.of(context).disabledColor,
-                    backgroundColor: Colors.transparent,
-                    disabledBackgroundColor: Colors.transparent,
-                    overlayColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    elevation: 0,
-                  ),
-                  child:
-                      Icon(Icons.settings, size: currentIndex == 0 ? 32 : 40),
-                ).expand,
-              ],
-            );
-          },
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).shadowColor,
+                blurRadius: 8,
+                offset: const Offset(-4, 4),
+              ),
+            ],
+          ),
+          child: BlocBuilder<DashboardBloc, DashboardState>(
+            builder: (context, state) {
+              final bloc = context.read<DashboardBloc>();
+              final currentIndex = bloc.currentNavBarIndex;
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: currentIndex == 0
+                        ? null
+                        : () => bloc.add(OnNavIndexChanged(currentIndex)),
+                    style: ElevatedButton.styleFrom(
+                      disabledForegroundColor: kColorScheme.primary,
+                      disabledIconColor: kColorScheme.primary,
+                      iconColor: Theme.of(context).disabledColor,
+                      foregroundColor: Theme.of(context).disabledColor,
+                      backgroundColor: Colors.transparent,
+                      disabledBackgroundColor: Colors.transparent,
+                      overlayColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      elevation: 0,
+                    ),
+                    child: Icon(Icons.home, size: currentIndex == 1 ? 32 : 40),
+                  ).expand,
+                  const SizedBox(width: 65),
+                  ElevatedButton(
+                    onPressed: currentIndex == 1
+                        ? null
+                        : () => bloc.add(OnNavIndexChanged(currentIndex)),
+                    style: ElevatedButton.styleFrom(
+                      disabledForegroundColor: kColorScheme.primary,
+                      foregroundColor: Theme.of(context).disabledColor,
+                      disabledIconColor: kColorScheme.primary,
+                      iconColor: Theme.of(context).disabledColor,
+                      backgroundColor: Colors.transparent,
+                      disabledBackgroundColor: Colors.transparent,
+                      overlayColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      elevation: 0,
+                    ),
+                    child:
+                        Icon(Icons.settings, size: currentIndex == 0 ? 32 : 40),
+                  ).expand,
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
   }
 }
 
-class NavBarCustomClipper extends CustomClipper<Path> {
+class _NavBarCustomClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();

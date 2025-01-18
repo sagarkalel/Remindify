@@ -1,24 +1,13 @@
 import 'package:flutter/material.dart';
 
-class XGap extends StatelessWidget {
-  const XGap(this.x, {super.key});
+class Gap extends StatelessWidget {
+  const Gap(this.val, {super.key});
 
-  final double x;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(width: x);
-  }
-}
-
-class YGap extends StatelessWidget {
-  const YGap(this.y, {super.key});
-
-  final double y;
+  final double val;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: y);
+    return SizedBox(height: val, width: val);
   }
 }
 

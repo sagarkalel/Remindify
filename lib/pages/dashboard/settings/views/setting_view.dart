@@ -2,14 +2,12 @@ import 'package:Remindify/components/app_textfield.dart';
 import 'package:Remindify/components/background_widget.dart';
 import 'package:Remindify/models/schedule_time_model.dart';
 import 'package:Remindify/pages/dashboard/home_page/bloc/home_bloc.dart';
-import 'package:Remindify/services/google_drive_sync.dart';
 import 'package:Remindify/utils/extensions.dart';
 import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../bloc/setting_bloc.dart';
 
@@ -41,7 +39,7 @@ class SettingView extends StatelessWidget {
                 children: [
                   Text("Reminders",
                       style: Theme.of(context).textTheme.titleLarge),
-                  const YGap(8),
+                  const Gap(8),
                   Column(
                       children: bloc.scheduledTimes.map((e) {
                     return ListTile(
@@ -69,7 +67,7 @@ class SettingView extends StatelessWidget {
                     ).padYBottom(8);
                   }).toList()),
                   if (bloc.scheduledTimes.length < 5) ...[
-                    const YGap(16),
+                    const Gap(16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -78,39 +76,6 @@ class SettingView extends StatelessWidget {
                           onPressed: () => viewOrAddScheduledTime(context),
                           icon: const Icon(Icons.more_time_rounded),
                         ),
-                      ],
-                    ),
-                    const YGap(16),
-                    Text("Sync & Cloud backup",
-                        style: Theme.of(context).textTheme.titleLarge),
-                    const YGap(8),
-                    Column(
-                      children: [
-                        const Text(
-                            "Sign in with Google to sync your events and to enable cloud backup."),
-                        const YGap(8),
-                        ElevatedButton(
-                            onPressed: () async {
-                              final syncService = GoogleDriveSync(
-                                  bloc: context.read<HomeBloc>());
-                              final result = await syncService.signIn();
-                              if (result) syncService.syncData();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: kColorScheme.onPrimary,
-                              foregroundColor: kColorScheme.primary,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  side: BorderSide(
-                                      color: kColorScheme.inversePrimary)),
-                            ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                FaIcon(FontAwesomeIcons.google),
-                                Text("Sign in with Google"),
-                              ],
-                            )),
                       ],
                     ),
                     const SizedBox(height: kToolbarHeight),
@@ -149,7 +114,7 @@ class SettingView extends StatelessWidget {
           : scheduleTimeModel.daysBefore.toString();
     }
 
-    showDialog(
+    showAdaptiveDialog(
       context: context,
       builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
@@ -199,7 +164,7 @@ class SettingView extends StatelessWidget {
                           },
                           title: const Text("The day of event"),
                         ),
-                        const YGap(8),
+                        const Gap(8),
                         RadioListTile(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -241,12 +206,12 @@ class SettingView extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              const XGap(8),
+                              const Gap(8),
                               const Text("day before the event"),
                             ],
                           ),
                         ),
-                        const YGap(8),
+                        const Gap(8),
                         Row(
                           children: [
                             OutlinedButton.icon(
@@ -281,7 +246,7 @@ class SettingView extends StatelessWidget {
                                   .textTheme
                                   .titleMedium
                                   ?.copyWith(color: kColorScheme.error)),
-                        const YGap(12),
+                        const Gap(12),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -297,7 +262,7 @@ class SettingView extends StatelessWidget {
                                 ),
                                 child: const Text("Delete"),
                               ),
-                            const XGap(16),
+                            const Gap(16),
                             ElevatedButton(
                               onPressed: () {
                                 final String selectedTime =

@@ -116,7 +116,7 @@ Future<Contact?> showImportFromContactBottomSheet(
                                   Navigator.pop(context, selectedContact),
                               child: const Text("Import")),
                         ).padXXDefault,
-                      const YGap(16),
+                      const Gap(16),
                     ],
                   ).expand;
                 },

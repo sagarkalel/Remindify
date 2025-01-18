@@ -36,78 +36,93 @@ class HomePageView extends StatelessWidget {
                   toolbarHeight: kToolbarHeight + 10,
 
                   /// search icon and text field
-                  title: bloc.isSearchVisible
-                      ? AppTextField(
-                          controller: bloc.searchController,
-                          focusNode: bloc.searchFocusNode,
-                          hintText: 'Search by name, phone or friend note...',
-                          onChanged: (p0) => bloc.add(SearchEvents()),
-                          prefix: IconButton(
-                            onPressed: () => bloc.add(const ClearSearch()),
-                            icon: const Icon(Icons.arrow_back),
-                          ),
-                          suffix: IconButton(
-                            onPressed: () =>
-                                bloc.add(const ClearSearch(clearOnly: true)),
-                            icon: const Icon(Icons.clear),
-                          ),
-                        )
-                      : IconButton(
-                          onPressed: () => bloc.add(GetSearch()),
-                          icon: const Icon(Icons.search, size: 28),
-                        ),
-                  actions: [
-                    /// import from contact
-                    bloc.isSearchVisible
-                        ? const SizedBox.shrink()
-                        : ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ImportNativeContactPage(),
-                                  )).then(
-                                (value) {
-                                  /// if value is true then only refresh data
-                                  if (value == true) {
-                                    bloc.add(FetchContactsInfoFromDb());
-                                  }
-                                },
-                              );
-                            },
-                            iconAlignment: IconAlignment.end,
-                            icon: const Text('Contacts'),
-                            label:
-                                const Icon(Icons.drive_file_move_rtl_outlined),
-                          ),
-
-                    /// filter
-                    bloc.isSearchVisible
-                        ? const SizedBox.shrink()
-                        : InkWell(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                showDragHandle: true,
-                                isScrollControlled: true,
-                                builder: (context) => const FilterBody(),
-                              );
-                            },
-                            child: CircleAvatar(
-                              maxRadius: 18,
-                              backgroundColor:
-                                  bloc.appliedFilter == filterList.first
-                                      ? Colors.transparent
-                                      : kColorScheme.onInverseSurface,
-                              child: Icon(
-                                bloc.appliedFilter == filterList.first
-                                    ? Icons.filter_list
-                                    : Icons.filter_list_off,
+                  title: bloc.isSelectedView
+                      ? OutlinedButton(
+                          onPressed: () => bloc.add(const ToggleSelectedView(
+                              enableSelectedView: false)),
+                          child: const Text('Cancel'))
+                      : bloc.isSearchVisible
+                          ? AppTextField(
+                              controller: bloc.searchController,
+                              focusNode: bloc.searchFocusNode,
+                              hintText:
+                                  'Search by name, phone or friend note...',
+                              onChanged: (p0) => bloc.add(SearchEvents()),
+                              prefix: IconButton(
+                                onPressed: () => bloc.add(const ClearSearch()),
+                                icon: const Icon(Icons.arrow_back),
                               ),
+                              suffix: IconButton(
+                                onPressed: () => bloc
+                                    .add(const ClearSearch(clearOnly: true)),
+                                icon: const Icon(Icons.clear),
+                              ),
+                            )
+                          : IconButton(
+                              onPressed: () => bloc.add(GetSearch()),
+                              icon: const Icon(Icons.search, size: 28),
                             ),
-                          ).padXX(10),
-                  ],
+                  actions: bloc.isSelectedView
+                      ? [
+                          ElevatedButton.icon(
+                            onPressed: () => _deleteContactsDialog(context),
+                            icon: Icon(
+                              Icons.delete_forever,
+                              color: kColorScheme.primaryContainer,
+                            ),
+                            label: const Text('Delete Selected'),
+                          ).padXX(16)
+                        ]
+                      : bloc.isSearchVisible
+                          ? []
+                          : [
+                              /// import from contact
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ImportNativeContactPage(),
+                                      )).then(
+                                    (value) {
+                                      /// if value is true then only refresh data
+                                      if (value == true) {
+                                        bloc.add(FetchContactsInfoFromDb());
+                                      }
+                                    },
+                                  );
+                                },
+                                iconAlignment: IconAlignment.end,
+                                icon: const Text('Contacts'),
+                                label: Icon(Icons.drive_file_move_rtl_outlined,
+                                    color: kColorScheme.primaryContainer),
+                              ),
+
+                              /// filter
+                              InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    showDragHandle: true,
+                                    isScrollControlled: true,
+                                    builder: (context) => const FilterBody(),
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  maxRadius: 18,
+                                  backgroundColor:
+                                      bloc.appliedFilter == filterList.first
+                                          ? Colors.transparent
+                                          : kColorScheme.onInverseSurface,
+                                  child: Icon(
+                                    bloc.appliedFilter == filterList.first
+                                        ? Icons.filter_list
+                                        : Icons.filter_list_off,
+                                  ),
+                                ),
+                              ).padXX(10),
+                            ],
                 ),
                 body: Stack(
                   alignment: Alignment.center,
@@ -146,6 +161,43 @@ class HomePageView extends StatelessWidget {
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  void _deleteContactsDialog(BuildContext context) {
+    final bloc = context.read<HomeBloc>();
+    showAdaptiveDialog(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: const Text("Alert"),
+          content: Column(
+            children: [
+              Icon(Icons.warning_rounded,
+                  size: 75, color: kColorScheme.primary.withOpacity(0.7)),
+              const Text(
+                  "Do you really want to delete selected Contact Events?")
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                bloc.add(const ToggleSelectedView(enableSelectedView: false));
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                bloc.add(DeleteSelectedContacts());
+              },
+              style: TextButton.styleFrom(foregroundColor: kColorScheme.error),
+              child: const Text("Delete"),
+            )
+          ],
         );
       },
     );

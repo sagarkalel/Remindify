@@ -7,6 +7,8 @@ abstract class HomeState extends Equatable {
   List<Object> get props => [];
 }
 
+final class HomeContactsInitialState extends HomeState {}
+
 final class HomeContactsLoadingState extends HomeState {}
 
 final class FilterChangedState extends HomeState {
@@ -76,11 +78,20 @@ final class NotificationPermissionCheckState extends HomeState {
   List<Object> get props => [isGranted];
 }
 
-final class ExactAlarmPermissionCheckState extends HomeState {
-  final bool isGranted;
+final class ToggleSelectedViewState extends HomeState {
+  final bool val;
 
-  const ExactAlarmPermissionCheckState(this.isGranted);
+  const ToggleSelectedViewState(this.val);
 
   @override
-  List<Object> get props => [isGranted];
+  List<Object> get props => [val];
+}
+
+final class ItemAddedInSelectedList extends HomeState {
+  final int length;
+
+  const ItemAddedInSelectedList(this.length);
+
+  @override
+  List<Object> get props => [length];
 }

@@ -51,7 +51,7 @@ class EventList extends StatelessWidget {
                 ).padYBottom(3),
               ),
             ).expand,
-            const XGap(8),
+            const Gap(8),
             IconButton(
               onPressed: () => onRemove(index),
               icon: Icon(Icons.close, color: Theme.of(context).primaryColor),

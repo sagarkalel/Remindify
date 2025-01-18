@@ -283,8 +283,8 @@ class AppServices {
         return 'Reminder for ${eventLabelToString[event]}! 📅📌';
       case EventLabel.custom:
         return 'Reminder for $customLabel! 📅📌';
-      default:
-        return 'Reminder for ${eventLabelToString[event]}! 📅📌';
+      // default:
+      //   return 'Reminder for ${eventLabelToString[event]}! 📅📌';
     }
   }
 

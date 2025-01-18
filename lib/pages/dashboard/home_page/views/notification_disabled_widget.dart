@@ -18,7 +18,7 @@ class NotificationDisabledWidget extends StatelessWidget {
         child: Row(
           children: [
             const Icon(Icons.notifications_off_outlined, size: 28),
-            const XGap(16),
+            const Gap(16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +33,7 @@ class NotificationDisabledWidget extends StatelessWidget {
                     "Enable notifications for timely reminders. Without this, reminders won't work."),
               ],
             ).expand,
-            const XGap(24),
+            const Gap(24),
             InkWell(
               onTap: () => _requestForPermission(context),
               child: Container(

@@ -74,8 +74,8 @@ class _DashboardScreenState extends State<DashboardScreen>
             );
           },
         ),
-        const Align(alignment: Alignment.bottomCenter, child: CustomNavBar()),
         const AddFabButton(),
+        const CustomNavBar(),
       ],
     ));
   }

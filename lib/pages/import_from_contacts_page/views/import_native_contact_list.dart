@@ -51,7 +51,7 @@ class ImportNativeContactList extends StatelessWidget {
                 ]
               : [
                   /// top gap
-                  const SliverToBoxAdapter(child: YGap(16)),
+                  const SliverToBoxAdapter(child: Gap(16)),
 
                   /// select all checkbox tile
                   SliverToBoxAdapter(
@@ -103,7 +103,7 @@ class ImportNativeContactList extends StatelessWidget {
                   ),
 
                   /// bottom gap
-                  const SliverToBoxAdapter(child: YGap(16)),
+                  const SliverToBoxAdapter(child: Gap(16)),
                 ],
         ).expand,
         BlocBuilder<ImportNativeContactBloc, ImportNativeContactState>(

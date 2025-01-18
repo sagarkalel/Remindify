@@ -43,3 +43,13 @@ extension WidgetExtensions on Widget {
         ],
       );
 }
+
+extension TitleCase on String {
+  String toTitleCase() {
+    return split(' ')
+        .where((word) => word.isNotEmpty)
+        .map((word) =>
+            '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}')
+        .join(' ');
+  }
+}

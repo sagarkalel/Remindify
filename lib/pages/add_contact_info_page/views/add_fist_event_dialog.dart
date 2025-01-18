@@ -52,7 +52,7 @@ Future<EventInfoModel?> addFirstEventDialog(context,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const XGap(8),
+                          const Gap(8),
                           Text(
                             selectedDate == null
                                 ? "Select date"
@@ -79,7 +79,7 @@ Future<EventInfoModel?> addFirstEventDialog(context,
                         ],
                       ),
                     ).expand,
-                    const XGap(8),
+                    const Gap(8),
                     EventDropdown(
                       value: dropdownValue,
                       initialEventLabelList: finalEventLabelList,
@@ -134,7 +134,7 @@ Future<EventInfoModel?> addFirstEventDialog(context,
                     ).expand,
                   ],
                 ),
-                const YGap(8),
+                const Gap(8),
                 Visibility(
                   visible: selectedDate == null,
                   child: Text(

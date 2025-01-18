@@ -52,3 +52,32 @@ class ClearSearch extends HomeEvent {
   @override
   List<Object?> get props => [clearOnly];
 }
+
+class AddItemToSelectedList extends HomeEvent {
+  final ContactInfoModel item;
+
+  const AddItemToSelectedList(this.item);
+
+  @override
+  List<Object?> get props => [item];
+}
+
+class RemoveItemFromSelectedList extends HomeEvent {
+  final ContactInfoModel item;
+
+  const RemoveItemFromSelectedList(this.item);
+
+  @override
+  List<Object?> get props => [item];
+}
+
+class DeleteSelectedContacts extends HomeEvent {}
+
+class ToggleSelectedView extends HomeEvent {
+  final bool enableSelectedView;
+
+  const ToggleSelectedView({required this.enableSelectedView});
+
+  @override
+  List<Object?> get props => [enableSelectedView];
+}

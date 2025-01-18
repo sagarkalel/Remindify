@@ -44,7 +44,7 @@ class ViewEventPage extends StatelessWidget {
                     icon: Icon(Icons.delete_forever_rounded,
                         color: kColorScheme.onPrimary),
                   ),
-                  const XGap(4),
+                  const Gap(4),
 
                   /// edit event contact
                   IconButton.filled(
@@ -68,7 +68,7 @@ class ViewEventPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const YGap(30),
+                        const Gap(30),
 
                         /// profile image
                         Center(
@@ -96,10 +96,10 @@ class ViewEventPage extends StatelessWidget {
                             ).padAll(2),
                           ),
                         )),
-                        const YGap(30),
+                        const Gap(30),
                         Text("Phone Number", style: headingStyle(context))
                             .padXLeft(20),
-                        const YGap(4),
+                        const Gap(4),
                         Card(
                           child: ListTile(
                             shape: RoundedRectangleBorder(
@@ -126,7 +126,7 @@ class ViewEventPage extends StatelessWidget {
                         /// Note
                         Text("Events", style: headingStyle(context))
                             .padXLeft(20),
-                        const YGap(4),
+                        const Gap(4),
                         Visibility(
                           visible: contactInfoModel.events.isEmpty,
                           child: Text(
@@ -146,11 +146,11 @@ class ViewEventPage extends StatelessWidget {
                           itemBuilder: (context, index) => EventListTile(
                               item: contactInfoModel.events[index]),
                         ),
-                        const YGap(16),
+                        const Gap(16),
 
                         /// Note
                         Text("Note", style: headingStyle(context)).padXLeft(20),
-                        const YGap(4),
+                        const Gap(4),
                         Card(
                           child: Container(
                             constraints: BoxConstraints(
@@ -188,8 +188,8 @@ class ViewEventPage extends StatelessWidget {
     );
   }
 
-  Future<void> _showDeleteAlertDialog(context) async {
-    showDialog(
+  void _showDeleteAlertDialog(context) {
+    showAdaptiveDialog(
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
@@ -198,7 +198,7 @@ class ViewEventPage extends StatelessWidget {
             children: [
               Icon(Icons.warning_rounded,
                   size: 75, color: kColorScheme.primary.withOpacity(0.7)),
-              const Text("Do you really want to delete this event ?")
+              const Text("Do you really want to delete this Contact Event?")
             ],
           ),
           actions: [
@@ -211,9 +211,7 @@ class ViewEventPage extends StatelessWidget {
                 context.read<HomeBloc>().add(DeleteContact(contactInfoModel));
                 Navigator.pop(context);
               },
-              style: TextButton.styleFrom(
-                foregroundColor: kColorScheme.error,
-              ),
+              style: TextButton.styleFrom(foregroundColor: kColorScheme.error),
               child: const Text("Delete"),
             )
           ],

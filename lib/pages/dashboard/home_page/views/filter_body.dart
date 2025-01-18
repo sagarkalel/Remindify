@@ -38,7 +38,7 @@ class _FilterBodyState extends State<FilterBody> {
                     .titleLarge
                     ?.copyWith(fontWeight: FontWeight.w600)),
             const Divider(),
-            const YGap(16),
+            const Gap(16),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               itemCount: filterList.length,
@@ -58,7 +58,7 @@ class _FilterBodyState extends State<FilterBody> {
                 );
               },
             ),
-            const YGap(40),
+            const Gap(40),
             Row(
               children: [
                 ElevatedButton(
@@ -80,7 +80,7 @@ class _FilterBodyState extends State<FilterBody> {
                   ),
                   child: const Text("Clear"),
                 ).expand,
-                const XGap(16),
+                const Gap(16),
                 ElevatedButton(
                   onPressed: () =>
                       bloc.add(AddFilter(selectedValue ?? filterList.first)),
@@ -88,7 +88,7 @@ class _FilterBodyState extends State<FilterBody> {
                 ).expand,
               ],
             ),
-            const YGap(16),
+            const Gap(16),
           ],
         );
       },

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:Remindify/models/event_info_model.dart';
 import 'package:Remindify/services/app_services.dart';
+import 'package:Remindify/utils/extensions.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
 class ContactInfoModel {
@@ -56,11 +57,11 @@ class ContactInfoModel {
   /// while storing data
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'friend_note': friendNote,
+      'name': name.trim().toTitleCase(),
+      'friend_note': friendNote?.trim(),
       'image': image,
       'in_build_id': inBuildId,
-      'phone': phone,
+      'phone': phone?.trim(),
       'last_modified': lastModified.toIso8601String(),
     };
   }

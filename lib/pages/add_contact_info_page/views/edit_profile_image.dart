@@ -25,19 +25,20 @@ Future<dynamic> editProfileImage(BuildContext context,
                   "Profile photo",
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                IconButton.filledTonal(
-                  onPressed: () {
-                    /// setting null value in image var when clicked on delete
-                    image = null;
-                    updateState(() {});
-                    Navigator.pop(context, 'delete');
-                  },
-                  icon: const Icon(Icons.delete_forever_rounded),
-                ),
+                if (image != null)
+                  IconButton.filledTonal(
+                    onPressed: () {
+                      /// setting null value in image var when clicked on delete
+                      image = null;
+                      updateState(() {});
+                      Navigator.pop(context, 'delete');
+                    },
+                    icon: const Icon(Icons.delete_forever_rounded),
+                  ),
               ],
             ).padXXDefault,
             const Divider().padXXDefault,
-            const YGap(8),
+            const Gap(8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -95,7 +96,7 @@ Future<dynamic> editProfileImage(BuildContext context,
                 ),
               ],
             ),
-            const YGap(30),
+            const Gap(30),
           ],
         );
       });

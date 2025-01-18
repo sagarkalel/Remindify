@@ -8,7 +8,7 @@ class HomePageList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (contactInfoList.isEmpty) {
-      return const Center(child: Text("No contacts found!"));
+      return const Center(child: Text("Events not found!"));
     }
     return ExtendedNestedScrollView(
       floatHeaderSlivers: true,
@@ -18,7 +18,7 @@ class HomePageList extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const YGap(16),
+              const Gap(16),
               Text(
                 "Upcoming Events (${contactInfoList.length})",
                 style: Theme.of(context).textTheme.titleLarge,

@@ -47,17 +47,21 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
   /// other variables
   final List<EventInfoModel> _events = [];
 
+  // to check wheather to edit or create event
+  ContactInfoModel? editContactModelData;
+
   @override
   void initState() {
     super.initState();
-    final editContactModelData =
+    editContactModelData =
         context.read<AddContactInfoBloc>().editContactInfoData;
+
     if (editContactModelData != null) {
-      nameController.text = editContactModelData.name;
-      phoneController.text = editContactModelData.phone ?? '';
-      noteController.text = editContactModelData.friendNote ?? '';
-      _events.addAll(editContactModelData.events);
-      profileImage = editContactModelData.image;
+      nameController.text = editContactModelData?.name ?? '';
+      phoneController.text = editContactModelData?.phone ?? '';
+      noteController.text = editContactModelData?.friendNote ?? '';
+      _events.addAll(editContactModelData?.events ?? []);
+      profileImage = editContactModelData?.image;
     }
   }
 
@@ -77,7 +81,9 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Create Event")),
+      appBar: AppBar(
+          title: Text(
+              editContactModelData != null ? "Update Event" : "Create Event")),
       body: Stack(
         children: [
           const BackgroundWidget(),
@@ -133,11 +139,14 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
                                         backgroundImage: profileImage == null
                                             ? null
                                             : MemoryImage(profileImage!),
-                                        child: Icon(
-                                          Icons.person,
-                                          size: 75,
-                                          color: Theme.of(context).focusColor,
-                                        ),
+                                        child: profileImage != null
+                                            ? null
+                                            : Icon(
+                                                Icons.person,
+                                                size: 75,
+                                                color: Theme.of(context)
+                                                    .focusColor,
+                                              ),
                                       ),
                                     ),
                                     Positioned(
@@ -166,7 +175,7 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
                                     )
                                   ],
                                 )),
-                                const YGap(30),
+                                const Gap(30),
 
                                 /// name
                                 Text("Name *", style: headingStyle(context)),
@@ -182,7 +191,7 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
                                     return null;
                                   },
                                 ),
-                                const YGap(10),
+                                const Gap(10),
 
                                 /// phone number
                                 Text(
@@ -253,12 +262,12 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
                                     return null;
                                   },
                                 ),
-                                const YGap(10),
+                                const Gap(10),
 
                                 /// event label
                                 Text("Events *", style: headingStyle(context)),
 
-                                const YGap(10),
+                                const Gap(10),
 
                                 /// event list
                                 EventList(
@@ -280,7 +289,7 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
                                     nameFocusNode.unfocus();
                                     phoneFocusNode.unfocus();
                                   }),
-                                const YGap(10),
+                                const Gap(10),
 
                                 /// add more events, button when events.length is less than 4
                                 if (_events.length < 4 &&
@@ -295,7 +304,7 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
                                       icon: const Icon(Icons.add_card_outlined),
                                     ),
                                   ),
-                                  const YGap(16)
+                                  const Gap(16)
                                 ],
 
                                 /// Note
@@ -309,7 +318,7 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
                                   focusNode: noteFocusNode,
                                   hintText: "Write note here...",
                                 ),
-                                const YGap(10),
+                                const Gap(10),
                               ],
                             ).padAll(16),
                           ).expand,
@@ -332,7 +341,7 @@ class _AddContactInfoPageViewState extends State<AddContactInfoPageView> {
                               ).expand,
                             ],
                           ).padXXDefault,
-                          const YGap(20)
+                          const Gap(20)
                         ],
                       ),
                       Visibility(

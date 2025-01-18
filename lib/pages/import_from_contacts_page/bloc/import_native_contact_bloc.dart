@@ -125,7 +125,9 @@ class ImportNativeContactBloc
       Emitter<ImportNativeContactState> emit) async {
     /// returning if any state is loading withing this page
     if (state is NativeContactLoadingState ||
-        state is NativeContactStoringState) return;
+        state is NativeContactStoringState) {
+      return;
+    }
 
     emit(NativeContactStoringState());
     try {

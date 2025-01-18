@@ -22,7 +22,7 @@ Future<void> viewFullScreenImage(BuildContext context, Uint8List image) async {
                   image,
                   fit: BoxFit.fitWidth,
                 )),
-            const YGap(50),
+            const Gap(50),
             Material(
               color: Colors.transparent,
               child: InkWell(
