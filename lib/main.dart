@@ -1,12 +1,13 @@
 import 'package:Remindify/pages/dashboard/bloc/dashboard_bloc.dart';
-import 'package:Remindify/pages/dashboard/dashboard_screen.dart';
 import 'package:Remindify/pages/dashboard/home_page/bloc/home_bloc.dart';
 import 'package:Remindify/pages/dashboard/settings/bloc/setting_bloc.dart';
+import 'package:Remindify/pages/splash_screen/splash_screen.dart';
 import 'package:Remindify/services/app_services.dart';
 import 'package:Remindify/utils/global_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'pages/dashboard/dashboard_screen.dart';
 import 'services/notification_services.dart';
 
 void main() async {
@@ -37,8 +38,11 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Event reminder app',
             navigatorKey: AppServices.navigatorKey,
-            initialRoute: '/dashboard',
-            routes: {"/dashboard": (context) => const DashboardScreen()},
+            initialRoute: '/splash',
+            routes: {
+              "/splash": (context) => const SplashScreen(),
+              "/dashboard": (context) => const DashboardScreen()
+            },
             theme: ThemeData.light(useMaterial3: true).copyWith(
               colorScheme: kColorScheme,
               appBarTheme: const AppBarTheme().copyWith(

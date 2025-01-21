@@ -346,6 +346,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     for (var e in selectedContactList) {
       await DatabaseServices.instance.deleteContact(e);
     }
+    add(const ToggleSelectedView(enableSelectedView: false));
     add(FetchContactsInfoFromDb());
   }
 }
